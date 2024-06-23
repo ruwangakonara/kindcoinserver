@@ -14,7 +14,10 @@ const userSchema = new mongoose.Schema({
         required: true,
         
     },
-    status: String
+    status: {
+        type: String,
+        required: true
+    }
 })
 
 const User = mongoose.model('User', userSchema)

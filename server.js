@@ -13,11 +13,15 @@ const mongo_connect = require("./config/mongo_connect")
 const Note = require("./models/note");
 const NoteController = require("./controllers/NoteController");
 const UserController = require("./controllers/Home/UserController");
+const requireAuth = require("./Middleware/requireAuth")
 
 const app = express()
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: true,
+    credentials: true
+}))
 app.use(cookieParser())
 
 
@@ -44,3 +48,4 @@ app.listen(process.env["PORT"])
 app.post("/signin", UserController.signin)
 app.post("/signup", UserController.signup)
 app.get("/signout", UserController.signout)
+app.get("/check-auth",requireAuth, UserController.checkAuth)
