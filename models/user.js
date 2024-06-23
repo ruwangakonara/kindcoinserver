@@ -15,7 +15,10 @@ const userSchema = new mongoose.Schema({
         
         
     },
-    status: String
+    status: {
+        type: String,
+        required: true
+    }
 })
 
 const User = mongoose.model('User', userSchema)
