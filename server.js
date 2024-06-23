@@ -13,6 +13,7 @@ const mongo_connect = require("./config/mongo_connect")
 const Note = require("./models/note");
 const NoteController = require("./controllers/NoteController");
 const UserController = require("./controllers/Home/UserController");
+const userRoutes = require("./Routes/UserRoutes");
 
 const app = express()
 
@@ -40,6 +41,7 @@ app.delete("/notes/:id", NoteController.deleteNote)
 
 app.listen(process.env["PORT"])
 
+app.use(userRoutes);
 
 app.post("/signin", UserController.signin)
 app.post("/signup", UserController.signup)
