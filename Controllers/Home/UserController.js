@@ -1,15 +1,66 @@
 const User = require('../../models/user');
+const Donor = require("../../models/donor")
+const Beneficiary = require("../../models/beneficiary");
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
 async function signup(req, res) {
 
+    console.log(req.body);
+
     try{
-        const {username, password} = req.body;
+        const {username, password, status, name, district, type, phoneNo, date_of_birth} = req.body;
 
         const hashedpass = bcrypt.hashSync(password, 8);
 
-        await User.create({username, password: hashedpass})
+
+        const user = await User.create({username, password: hashedpass, status})
+
+        const user_id = user._id
+
+        // const {} = req.body;
+
+        // if(type === "individual"){
+        //     const {date_of_birth} = req.body
+        //     const donor = await Donor.create({user_id, name, username, district, type, date_of_birth, phoneNo})
+        //
+        // } else {
+        //     const {date_of_birth} = req.body x
+
+            const donor = await Donor.create({user_id, name, username, district, type, date_of_birth, phoneNo})
+        console.log("Yo")
+
+        // }
+
+        res.sendStatus(200)
+    } catch (err){
+        res.sendStatus(400);
+    }
+
+}
+
+async function beneficiary_registration(req, res) {
+
+    try{
+        const {username, password, status, date_of_birth, name, type, district, phoneNo} = req.body;
+
+        const hashedpass = bcrypt.hashSync(password, 8);
+
+        const user = await User.create({username, password: hashedpass, status})
+
+        const user_id = user._id
+        // const {} = req.body;
+
+        // if(type === "individual"){
+        //     const {date_of_birth} = req.body
+            const beneficiary = await Beneficiary.create({user_id, name, phoneNo, username,district, type, date_of_birth})
+
+        // } else {
+        //     const {} = req.body
+
+            // const beneficiary = await Beneficiary.create({user_id, name, description, username, district, type, date_of_birth})
+
+        // }
 
         res.sendStatus(200)
     } catch (err){
@@ -46,7 +97,19 @@ async function signin(req, res) {
         });
 
         // Include the user in the response body
-        res.status(200).json({user: user} );
+        if(user.status === "donor"){
+            const donor = await Donor.findOne({ user_id: user._id });
+            res.status(200).json({user: user, donor: donor} );
+
+        } else if(user.status === "beneficiary"){
+            const beneficiary = await Beneficiary.findOne({ user_id: user._id });
+            res.status(200).json({user: user, beneficiary: beneficiary} );
+
+        } else {
+            res.status(200).json({user: user} );
+
+        }
+
     } catch (err) {
         console.log(err);
         res.sendStatus(400);
@@ -84,6 +147,7 @@ module.exports = {
     signin,
     signout,
     signup,
+    beneficiary_registration,
     checkAuth
 }
 
