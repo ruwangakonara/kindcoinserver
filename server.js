@@ -14,6 +14,7 @@ const Note = require("./models/note");
 const NoteController = require("./controllers/NoteController");
 
 const homeRoutes = require("./routes/HomeRoutes");
+const adminRoutes = require("./Routes/AdminRoutes");
 
 
 const app = express()
@@ -49,3 +50,4 @@ app.listen(process.env["PORT"])
 
 
 app.use("/", homeRoutes)
+app.use("/admin", adminRoutes)
