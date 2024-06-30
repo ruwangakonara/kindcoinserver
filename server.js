@@ -44,7 +44,7 @@ app.delete("/notes/:id", NoteController.deleteNote)
 
 app.listen(process.env["PORT"])
 
-app.use(userRoutes);
+// app.use(userRoutes);
 
 app.post("/signin", UserController.signin)
 app.post("/signup", UserController.signup)
