@@ -15,6 +15,7 @@ const homeRoutes = require("./routes/HomeRoutes");
 const donorRoutes = require("./routes/DonorRoutes");
 const beneficiaryRoutes = require("./routes/BeneficiaryRoutes");
 const uploader = require("./middleware/donor/uploader"); // Adjust the path based on your folder structure
+const adminRoutes = require("./Routes/AdminRoutes");
 
 const app = express();
 
@@ -52,6 +53,18 @@ app.use("/", homeRoutes);
 app.use("/donor", donorRoutes);
 app.use("/beneficiary", beneficiaryRoutes);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
-});
+
+app.get("/notes/:id", NoteController.getNote)
+
+app.post("/notes", NoteController.postNote)
+
+app.put("/notes/:id", NoteController.updateNote)
+
+app.delete("/notes/:id", NoteController.deleteNote)
+
+app.listen(process.env["PORT"])
+
+// app.use(userRoutes);
+
+
+app.use("/admin", adminRoutes)
