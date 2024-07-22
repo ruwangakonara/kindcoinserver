@@ -13,6 +13,12 @@ const donationSchema = new mongoose.Schema({
         required: true
     },
 
+    request_id:{
+      type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:"Request"
+    },
+
     title:{
         type: String,
         required: true
@@ -67,6 +73,32 @@ const donationSchema = new mongoose.Schema({
 
     email:{
         type: String,
+    },
+
+    doc_obtained:{
+        type:Boolean,
+        default: false
+    },
+
+    doc_paid:{
+        type:Boolean,
+        default: false
+    },
+
+    token_amount:{
+        type: Number,
+   },
+
+    xlmToLkrRate:{
+        type: Number,
+    },
+
+    tokenToXlmRate:{
+        type: Number,
+    },
+
+    donation_date:{
+        type: Date,
     }
 })
 
