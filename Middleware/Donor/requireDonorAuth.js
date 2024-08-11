@@ -23,6 +23,7 @@ async function requireDonorAuth(req, res, next) {
         next()
         
     } catch (err) {
+        console.log("dog")
         return res.sendStatus(401)
     }
    

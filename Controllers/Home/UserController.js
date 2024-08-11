@@ -149,6 +149,8 @@ module.exports = {
     signout,
     signup,
     beneficiary_registration,
-    checkAuth
+    checkAuth,
+    Beneficiary,
+    Donor
 }
 
