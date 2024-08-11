@@ -122,5 +122,6 @@ module.exports = {
     deleteRequest,
     getRequests,
     getRequest,
-    getMyRequests
+    getMyRequests,
+    Request,
 }

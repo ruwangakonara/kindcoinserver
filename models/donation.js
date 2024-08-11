@@ -1,5 +1,16 @@
 const mongoose = require("mongoose")
 
+const goodSchema = new mongoose.Schema({
+    item: {
+        type: String,
+        required: true
+    },
+    amount: {
+        type: String,
+        required: true
+    }
+});
+
 const donationSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -44,9 +55,7 @@ const donationSchema = new mongoose.Schema({
         default: false
     },
 
-    goods:{
-        type:mongoose.Schema.Types.Mixed
-    },
+    goods: [goodSchema],
 
     verified:{
         type: Boolean,
@@ -66,21 +75,21 @@ const donationSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
-    name: {
-        type: String,
-        required: true
-    },
+    // name: {
+    //     type: String,
+    //     required: true
+    // },
 
     email:{
         type: String,
     },
 
-    doc_obtained:{
-        type:Boolean,
-        default: false
+    doc_transac_id:{
+        type:String,
+        default:""
     },
 
-    doc_paid:{
+    doc_verified:{
         type:Boolean,
         default: false
     },
@@ -88,6 +97,10 @@ const donationSchema = new mongoose.Schema({
     token_amount:{
         type: Number,
    },
+
+    doc_token_amount:{
+        type: Number,
+    },
 
     xlmToLkrRate:{
         type: Number,
@@ -99,6 +112,10 @@ const donationSchema = new mongoose.Schema({
 
     donation_date:{
         type: Date,
+    },
+    attest_obtained:{
+        type: Boolean,
+        default: false
     }
 })
 

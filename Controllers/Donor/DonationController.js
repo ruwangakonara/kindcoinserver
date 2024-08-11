@@ -1,17 +1,45 @@
 const Donation = require("../../models/donation");
-const Request = require("../../models/request");
+const request = require("../../Controllers/Beneficiary/RequestController");
+const Request = request.Request
+
+// async function createDonation(req, res) {
+//
+//     try{
+//         if (req.body.type === "goods"){
+//             const {user_id, donor_id, title, description, address, phone, email, type, goods, name, value, request_id} = req.body;
+//             const donation = await Donation.create({user_id, donor_id, title, description, address, phone, email, type, goods, name, value, request_id});
+//             res.status(201).json({donation: donation});
+//
+//         } else {
+//             const {user_id, donor_id, title, description, address, phone, email, type, name, value, request_id} = req.body;
+//             const donation = await Donation.create({user_id, donor_id, title, description, address, phone, email, type, name, value, request_id});
+//             res.status(201).json({donation: donation});
+//
+//         }
+//
+//
+//     } catch(err){
+//
+//         res.status(400).json({error: err.message});
+//     }
+//
+//
+// }
 
 async function createDonation(req, res) {
 
     try{
         if (req.body.type === "goods"){
-            const {user_id, donor_id, title, description, address, phone, email, type, goods, name, value, request_id} = req.body;
-            const donation = await Donation.create({user_id, donor_id, title, description, address, phone, email, type, goods, name, value, request_id});
+
+            const {user_id, donor_id, title, description, goods, request_id, type} = req.body;
+            const donation = await Donation.create({user_id, donor_id, title, description, goods, request_id, type});
             res.status(201).json({donation: donation});
 
         } else {
-            const {user_id, donor_id, title, description, address, phone, email, type, name, value, request_id} = req.body;
-            const donation = await Donation.create({user_id, donor_id, title, description, address, phone, email, type, name, value, request_id});
+            console.log("Nigga")
+
+            const {user_id, donor_id, title, description, value, request_id, type} = req.body;
+            const donation = await Donation.create({user_id, donor_id, title, description, value, request_id, type});
             res.status(201).json({donation: donation});
 
         }
@@ -19,7 +47,7 @@ async function createDonation(req, res) {
 
     } catch(err){
 
-        res.status(400).json({error: err.message});
+        res.status(409).json({error: err.message});
     }
 
 

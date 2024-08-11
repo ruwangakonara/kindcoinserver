@@ -15,7 +15,7 @@ const homeRoutes = require("./routes/HomeRoutes");
 const donorRoutes = require("./routes/DonorRoutes");
 const beneficiaryRoutes = require("./routes/BeneficiaryRoutes");
 const uploader = require("./middleware/donor/uploader"); // Adjust the path based on your folder structure
-const adminRoutes = require("./Routes/AdminRoutes");
+// const adminRoutes = require("./Routes/AdminRoutes");
 
 const app = express();
 
@@ -67,4 +67,4 @@ app.listen(process.env["PORT"])
 // app.use(userRoutes);
 
 
-app.use("/admin", adminRoutes)
+// app.use("/admin", adminRoutes)
