@@ -30,6 +30,12 @@ const donationSchema = new mongoose.Schema({
         ref:"Request"
     },
 
+    beneficiary_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:"Beneficiary"
+    },
+
     title:{
         type: String,
         required: true

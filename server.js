@@ -25,6 +25,25 @@ if (!fs.existsSync(donorProfileImagesDir)) {
     fs.mkdirSync(donorProfileImagesDir, { recursive: true });
 }
 
+const beneficiaryProfileImagesDir = path.join(__dirname, 'images/profileimages/beneficiary');
+const beneficiaryProofImagesDir = path.join(__dirname, 'images/beneficiary_proof');
+const beneficiaryCertificateDir = path.join(__dirname, 'images/beneficiary_certificate');
+
+[beneficiaryProfileImagesDir, beneficiaryProofImagesDir, beneficiaryCertificateDir].forEach(dir => {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+});
+
+const requestProofImagesDir = path.join(__dirname, 'images/request_proof');
+const requestCertificateDir = path.join(__dirname, 'images/request_certificate');
+
+[requestProofImagesDir, requestCertificateDir].forEach(dir => {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+});
+
 app.use(express.json());
 app.use(cors({
     origin: true,
@@ -36,6 +55,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the images directory
 app.use('/images/profileimages/donor', express.static(donorProfileImagesDir));
+app.use('/images/profileimages/beneficiary', express.static(beneficiaryProfileImagesDir));
+app.use('/images/beneficiary_proof', express.static(beneficiaryProofImagesDir));
+app.use('/images/beneficiary_certificate', express.static(beneficiaryCertificateDir));
+app.use('/images/request_proof', express.static(requestProofImagesDir));
+app.use('/images/request_certificate', express.static(requestCertificateDir));
 
 mongo_connect();
 

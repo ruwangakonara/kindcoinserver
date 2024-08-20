@@ -1,6 +1,11 @@
 const Donation = require("../../models/donation");
 const request = require("../../Controllers/Beneficiary/RequestController");
+
 const Request = request.Request
+const beneficiary = require("../../Controllers/Home/UserController")
+const mongoose = require("mongoose");
+const Beneficiary = beneficiary.Beneficiary
+
 
 // async function createDonation(req, res) {
 //
@@ -53,16 +58,91 @@ async function createDonation(req, res) {
 
 }
 
+async function getDonationsWithRequestDetails(filterCriteria) {
+    try {
+        const results = await Donation.aggregate([
+            {
+                $match: filterCriteria // Apply filter criteria
+            },
+            {
+                $lookup: {
+                    from: 'requests', // Collection name for requests
+                    localField: 'request_id',
+                    foreignField: '_id',
+                    as: 'requestDetails' // Field to be populated
+                }
+            },
+            {
+                $unwind: '$requestDetails' // Unwind the request details
+            },
+            {
+                $lookup: {
+                    from: 'beneficiaries', // Collection name for beneficiaries
+                    localField: 'beneficiary_id', // Change to the actual field name for beneficiary ID
+                    foreignField: '_id',
+                    as: 'beneficiaryDetails' // Field to be populated
+                }
+            },
+            {
+                $unwind: '$beneficiaryDetails' // Unwind the beneficiary details
+            },
+            {
+                $project: {
+                    donationDetails: '$$ROOT',
+                    request_id: '$requestDetails._id',
+                    beneficiary_id: 'beneficiaryDetails._id',
+                    request_title: '$requestDetails.title',
+                    profile_image: '$beneficiaryDetails.profile_image',
+                    beneficiary_name: '$beneficiaryDetails.name', // Add other fields as needed
+                }
+            }
+        ]);
+
+        console.log(results);
+
+        return results;
+
+    } catch (error) {
+        console.error('Error retrieving donations with request and beneficiary details:', error);
+    }
+}
+
+
+// async function getDonations(req, res) {
+//
+//     try{
+//
+//         const donations = await Donation.find(req.body);
+//         res.status(200).json({requests: donations});
+//
+//     } catch(err){
+//
+//         res.status(400).json({error: err.message});
+//
+//     }
+//
+// }
+
 async function getDonations(req, res) {
 
     try{
 
-        const donations = await Donation.find(req.body);
-        res.status(200).json({requests: donations});
+
+        if (req.body.donor_id){
+            req.body.donor_id = new mongoose.Types.ObjectId(req.body.donor_id);
+        }
+
+        console.log(req.body)
+
+
+        const donations = await getDonationsWithRequestDetails(req.body);
+        console.log(donations);
+
+        res.status(200).json({donations: donations});
 
     } catch(err){
 
-        res.status(400).json({error: err.message});
+        res.status(407).json({error: err.message});
 
     }
 
@@ -72,7 +152,11 @@ async function getDonation(req, res) {
     try{
 
         const donation = await Donation.findOne(req.body);
-        res.status(200).json({donation: donation});
+
+        const request = await  Request.findById(donation.request_id);
+        const beneficiary = await  Request.findById(donation.beneficiary_id);
+
+        res.status(200).json({donation: donation, request: request, beneficiary: beneficiary});
 
     } catch(err){
 
