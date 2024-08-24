@@ -1,17 +1,45 @@
 const Donation = require("../../models/donation");
-const Request = require("../../models/request");
+const request = require("../../Controllers/Beneficiary/RequestController");
+const Request = request.Request
+
+// async function createDonation(req, res) {
+//
+//     try{
+//         if (req.body.type === "goods"){
+//             const {user_id, donor_id, title, description, address, phone, email, type, goods, name, value, request_id} = req.body;
+//             const donation = await Donation.create({user_id, donor_id, title, description, address, phone, email, type, goods, name, value, request_id});
+//             res.status(201).json({donation: donation});
+//
+//         } else {
+//             const {user_id, donor_id, title, description, address, phone, email, type, name, value, request_id} = req.body;
+//             const donation = await Donation.create({user_id, donor_id, title, description, address, phone, email, type, name, value, request_id});
+//             res.status(201).json({donation: donation});
+//
+//         }
+//
+//
+//     } catch(err){
+//
+//         res.status(400).json({error: err.message});
+//     }
+//
+//
+// }
 
 async function createDonation(req, res) {
 
     try{
         if (req.body.type === "goods"){
-            const {user_id, donor_id, title, description, address, phone, email, type, goods, name, value} = req.body;
-            const donation = await Donation.create({user_id, donor_id, title, description, address, phone, email, type, goods, name, value});
+
+            const {user_id, donor_id, title, description, goods, request_id, type} = req.body;
+            const donation = await Donation.create({user_id, donor_id, title, description, goods, request_id, type});
             res.status(201).json({donation: donation});
 
         } else {
-            const {user_id, donor_id, title, description, address, phone, email, type, name, value} = req.body;
-            const donation = await Donation.create({user_id, donor_id, title, description, address, phone, email, type, name, value});
+            console.log("Nigga")
+
+            const {user_id, donor_id, title, description, value, request_id, type} = req.body;
+            const donation = await Donation.create({user_id, donor_id, title, description, value, request_id, type});
             res.status(201).json({donation: donation});
 
         }
@@ -19,7 +47,7 @@ async function createDonation(req, res) {
 
     } catch(err){
 
-        res.status(400).json({error: err.message});
+        res.status(409).json({error: err.message});
     }
 
 
@@ -61,14 +89,16 @@ async function updateDonation(req, res) {
 
         const donation = await Donation.findOne({_id: req.body.donation_id})
 
-        if(request.user_id !== user_id){
+        if(donation.user_id !== user_id){
             return res.status(400).send()
         }
 
 
-        const updatedDona = await Donation.findByIdAndUpdate(req.nody.request_id, req.body)
+        const id = req.body.donation_id
+        delete req.body.donation_id
+        const updatedDona = await Donation.findByIdAndUpdate(id, req.body)
 
-        res.status(201).json({request: updatedDona});
+        res.status(201).json({donation: updatedDona});
 
     } catch(err){
         res.status(400).json({error: err.message});

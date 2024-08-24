@@ -42,6 +42,7 @@ async function signup(req, res) {
 async function beneficiary_registration(req, res) {
 
     try{
+        console.log("dawg")
         const {username, password, status, date_of_birth, name, type, district, phoneNo} = req.body;
 
         const hashedpass = bcrypt.hashSync(password, 8);
@@ -148,6 +149,8 @@ module.exports = {
     signout,
     signup,
     beneficiary_registration,
-    checkAuth
+    checkAuth,
+    Beneficiary,
+    Donor
 }
 

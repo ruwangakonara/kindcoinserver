@@ -58,6 +58,17 @@ const donorSchema = new Schema({
     phoneNo: {
         type: String,
         required: true
+    },
+    usual_donations:{
+        type:[String]
+    },
+    donated:{
+        type:Number,
+        default:0
+    },
+    tokens:{
+        type:Number,
+        default:0
     }
     // updated_at: {
     //     type: Date,

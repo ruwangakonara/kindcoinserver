@@ -44,11 +44,12 @@ const requestSchema = new mongoose.Schema({
     },
     images: {
         type: [String],
-        default: []
+        default: ['https://via.placeholder.com/150', 'https://via.placeholder.com/150', 'https://via.placeholder.com/150'],
+        required: true
     },
     certificate_image: {
         type: String,
-        default: 'https://via.placeholder.com/150'
+        default: 'https://via.placeholder.com/300'
     },
 
     address:{

@@ -3,7 +3,12 @@ const Request = require("../../models/Request");
 async function createRequest(req, res) {
 
     try{
+        console.log("yo")
         const {user_id, beneficiary_id, title, description, address, phone, email, type} = req.body;
+
+        if(user_id !== req.sub){
+            return res.status(400).send({})
+        }
 
         const request = await Request.create({user_id, beneficiary_id, title, description, address, phone, email, type})
 
@@ -43,6 +48,24 @@ async function getRequests(req, res) {
 
     try{
 
+        const requests = await Request.find(req.body);
+        res.status(200).json({requests: requests});
+
+    } catch(err){
+
+        res.status(400).json({error: err.message});
+
+    }
+
+}
+
+async function getMyRequests(req, res) {
+
+    try{
+
+        if(req.body.user_id !== req.sub){
+            return res.status(400).send({})
+        }
         const requests = await Request.find(req.body);
         res.status(200).json({requests: requests});
 
@@ -98,5 +121,7 @@ module.exports = {
     updateRequest,
     deleteRequest,
     getRequests,
-    getRequest
+    getRequest,
+    getMyRequests,
+    Request,
 }

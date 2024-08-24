@@ -60,11 +60,15 @@ const beneficairySchema = new Schema({
     phoneNo: {
         type: String,
         required: true
-    }
+    },
     // updated_at: {
     //     type: Date,
     //     default: Date.now
     // }
+    verified: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const Beneficiary = mongoose.model('Beneficiary', beneficairySchema);
