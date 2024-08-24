@@ -3,6 +3,7 @@ const Donation = require("../../models/donation");
 // const Token = require("../../models/token");
 const Beneficiary = require("../../models/beneficiary");
 const Request = require("../../models/request");
+const Admin = require("../../models/admin");
 
 // router.get('/alldonations', AdminController.getAllDonations);
 // router.get('/alltokens', AdminController.getAllTokens);

@@ -9,7 +9,7 @@ const express = require("express");
 const router = express.Router();
 const AdminController = require("../Controllers/Admin/AdminController");
 
-router.get("/allusers", AdminController.getAllUsers);
+// router.get("/allusers", AdminController.getAllUsers);
 router.get("/alldonations", AdminController.getAllDonations);
 router.get("/alltokens", AdminController.getAllTokens);
 router.get("/allbeneficiaries", AdminController.getAllBeneficiaries);
