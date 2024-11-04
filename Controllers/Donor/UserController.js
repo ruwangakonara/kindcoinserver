@@ -35,9 +35,11 @@ async function getBeneficiaries(req, res) {
 
 async function getDonor(req, res) {
 
+    console.log("FUCK YOU")
 
         try {
             const donor = await Donor.findOne(req.body)
+            console.log(donor)
             res.status(200).json({donor: donor});
 
         }catch(error) {

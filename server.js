@@ -25,6 +25,11 @@ if (!fs.existsSync(donorProfileImagesDir)) {
     fs.mkdirSync(donorProfileImagesDir, { recursive: true });
 }
 
+const donationImagesDir = path.join(__dirname, 'images/donation_proof');
+if (!fs.existsSync(donationImagesDir)) {
+    fs.mkdirSync(donationImagesDir, { recursive: true });
+}
+
 const beneficiaryProfileImagesDir = path.join(__dirname, 'images/profileimages/beneficiary');
 const beneficiaryProofImagesDir = path.join(__dirname, 'images/beneficiary_proof');
 const beneficiaryCertificateDir = path.join(__dirname, 'images/beneficiary_certificate');
@@ -55,6 +60,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the images directory
 app.use('/images/profileimages/donor', express.static(donorProfileImagesDir));
+app.use('/images/donation_proof', express.static(donationImagesDir));
 app.use('/images/profileimages/beneficiary', express.static(beneficiaryProfileImagesDir));
 app.use('/images/beneficiary_proof', express.static(beneficiaryProofImagesDir));
 app.use('/images/beneficiary_certificate', express.static(beneficiaryCertificateDir));

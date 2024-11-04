@@ -76,6 +76,10 @@ const requestSchema = new mongoose.Schema({
         type: String,
         default:""
 
+    },
+    raised:{
+        type: Number,
+        default:0
     }
 })
 

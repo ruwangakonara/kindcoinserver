@@ -1,5 +1,6 @@
-const Donation = require("../../models/donation");
-const Request = require("../../models/request");
+const donation = require("../../Controllers/Donor/DonationController");
+const Donation = donation.Donation
+// const Request = require("../../models/request");
 const mongoose = require("mongoose");
 
 async function getDonationsWithDonorDetails(filterCriteria) {
