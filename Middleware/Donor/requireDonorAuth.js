@@ -8,6 +8,7 @@ async function requireDonorAuth(req, res, next) {
         
         const token = req.cookies.Authorization;
         console.log(token)
+        console.log("blud")
 
         const decoded = jwt.verify(token, process.env["SECRET"])
 
