@@ -14,7 +14,7 @@ const NoteController = require("./controllers/NoteController");
 const homeRoutes = require("./routes/HomeRoutes");
 const donorRoutes = require("./routes/DonorRoutes");
 const beneficiaryRoutes = require("./routes/BeneficiaryRoutes");
-const uploader = require("./middleware/donor/uploader"); // Adjust the path based on your folder structure
+const uploader = require("./Middleware/Donor/uploader"); // Adjust the path based on your folder structure
 // const adminRoutes = require("./Routes/AdminRoutes");
 
 const app = express();
