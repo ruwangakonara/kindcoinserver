@@ -30,6 +30,12 @@ const donationSchema = new mongoose.Schema({
         ref:"Request"
     },
 
+    beneficiary_id:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:"Beneficiary"
+    },
+
     title:{
         type: String,
         required: true
@@ -86,7 +92,7 @@ const donationSchema = new mongoose.Schema({
 
     doc_transac_id:{
         type:String,
-        default:""
+        default:"Not Entered Yet"
     },
 
     doc_verified:{
@@ -116,6 +122,36 @@ const donationSchema = new mongoose.Schema({
     attest_obtained:{
         type: Boolean,
         default: false
+    },
+
+    image1: {
+        type: String,
+        default: 'https://via.placeholder.com/300',
+        required: true
+    },
+
+    image2: {
+        type: String,
+        default: 'https://via.placeholder.com/300',
+        required: true
+    },
+
+    image3: {
+        type: String,
+        default: 'https://via.placeholder.com/300',
+        required: true
+    },
+    image4: {
+        type: String,
+        default: 'https://via.placeholder.com/300'
+    },
+    phone:{
+        type: String,
+        default:""
+    },
+    member_id:{
+        type: mongoose.Types.ObjectId,
+        ref: "Member"
     }
 })
 

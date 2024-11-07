@@ -42,9 +42,21 @@ const requestSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    images: {
-        type: [String],
-        default: ['https://via.placeholder.com/150', 'https://via.placeholder.com/150', 'https://via.placeholder.com/150'],
+    image1: {
+        type: String,
+        default: 'https://via.placeholder.com/300',
+        required: true
+    },
+
+    image2: {
+        type: String,
+        default: 'https://via.placeholder.com/300',
+        required: true
+    },
+
+    image3: {
+        type: String,
+        default: 'https://via.placeholder.com/300',
         required: true
     },
     certificate_image: {
@@ -58,6 +70,16 @@ const requestSchema = new mongoose.Schema({
     },
     email:{
         type: String,
+        default:""
+    },
+    phone:{
+        type: String,
+        default:""
+
+    },
+    raised:{
+        type: Number,
+        default:0
     }
 })
 
