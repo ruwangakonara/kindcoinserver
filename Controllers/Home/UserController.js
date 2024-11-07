@@ -35,6 +35,7 @@ async function signup(req, res) {
         res.sendStatus(200)
     } catch (err){
         res.sendStatus(400);
+        console.log(err);
     }
 
 }
@@ -44,7 +45,7 @@ async function beneficiary_registration(req, res) {
     try{
         console.log("dawg")
         const {username, password, status, date_of_birth, name, type, district, phoneNo} = req.body;
-
+        console.log("Data passed");
         const hashedpass = bcrypt.hashSync(password, 8);
 
         const user = await User.create({username, password: hashedpass, status})
@@ -62,7 +63,7 @@ async function beneficiary_registration(req, res) {
             // const beneficiary = await Beneficiary.create({user_id, name, description, username, district, type, date_of_birth})
 
         // }
-
+        console.log("Succesfully registered")
         res.sendStatus(200)
     } catch (err){
         res.sendStatus(400);
