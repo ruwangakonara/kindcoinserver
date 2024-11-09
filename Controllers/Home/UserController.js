@@ -46,17 +46,11 @@ async function signup(req, res) {
     console.log("Yo");
 
     // }
-
     res.sendStatus(200);
   } catch (err) {
     res.sendStatus(400);
+    console.log(err);
   }
-        res.sendStatus(200)
-    } catch (err){
-        res.sendStatus(400);
-        console.log(err);
-    }
-
 }
 
 async function beneficiary_registration(req, res) {
@@ -98,18 +92,12 @@ async function beneficiary_registration(req, res) {
     // const beneficiary = await Beneficiary.create({user_id, name, description, username, district, type, date_of_birth})
 
     // }
-
+    // }
+    console.log("Succesfully registered");
     res.sendStatus(200);
   } catch (err) {
     res.sendStatus(400);
   }
-        // }
-        console.log("Succesfully registered")
-        res.sendStatus(200)
-    } catch (err){
-        res.sendStatus(400);
-    }
-
 }
 
 async function signin(req, res) {
