@@ -21,17 +21,30 @@ const beneficairySchema = new Schema({
         type: String,
         // required: true
     },
-    images: {
-        type: [String],
-        default: []
+    image1:{
+        type: String,
+        default: 'https://via.placeholder.com/300'
+
     },
+
+    image2:{
+        type: String,
+        default: 'https://via.placeholder.com/300'
+
+    },
+
+    image3:{
+        type: String,
+        default: 'https://via.placeholder.com/300'
+    },
+
     profile_image: {
         type: String,
-        default: 'https://via.placeholder.com/150'
+        default: 'https://via.placeholder.com/300'
     },
     certificate_image: {
         type: String,
-        default: 'https://via.placeholder.com/150'
+        default: 'https://via.placeholder.com/300'
     },
     description: {
         type: String,
@@ -68,6 +81,11 @@ const beneficairySchema = new Schema({
     verified: {
         type: Boolean,
         default: false
+    },
+
+    raised_amount:{
+        type: Number,
+        default:0
     }
 });
 

@@ -51,10 +51,17 @@ async function signup(req, res) {
   } catch (err) {
     res.sendStatus(400);
   }
+        res.sendStatus(200)
+    } catch (err){
+        res.sendStatus(400);
+        console.log(err);
+    }
+
 }
 
 async function beneficiary_registration(req, res) {
   try {
+    console.log("dawg");
     const {
       username,
       password,
@@ -96,6 +103,13 @@ async function beneficiary_registration(req, res) {
   } catch (err) {
     res.sendStatus(400);
   }
+        // }
+        console.log("Succesfully registered")
+        res.sendStatus(200)
+    } catch (err){
+        res.sendStatus(400);
+    }
+
 }
 
 async function signin(req, res) {
