@@ -1,6 +1,7 @@
 const User = require("../../models/user");
 const Donor = require("../../models/donor");
 const Beneficiary = require("../../models/beneficiary");
+const CrewMember = require("../../models/crew_member");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -100,6 +101,54 @@ async function beneficiary_registration(req, res) {
   }
 }
 
+async function crewMember_registration(req, res) {
+  try {
+    console.log("Crew Mem Registration Start");
+    // status has to be "crewMember"
+    const {
+      name,
+      username,
+      stellarid,
+      town,
+      // images,
+      profile_image,
+      certificate_image,
+      email,
+      phoneNo,
+      noOfOperations,
+      password,
+      status,
+    } = req.body;
+
+    const hashedpass = bcrypt.hashSync(password, 8);
+
+    const user = await User.create({ username, password: hashedpass, status });
+
+    const user_id = user._id;
+    const created_at = Date.now();
+    const crewMember = await CrewMember.create({
+      user_id,
+      name,
+      username,
+      stellarid,
+      town,
+      // images,
+      profile_image,
+      certificate_image,
+      email,
+      phoneNo,
+      noOfOperations,
+      created_at,
+    });
+    console.log("Crew Member Succesfully registered");
+    console.log(crewMember);
+    res.sendStatus(200);
+  } catch (err) {
+    res.sendStatus(400);
+    console.log(err);
+  }
+}
+
 async function signin(req, res) {
   try {
     const { username, password } = req.body;
@@ -134,6 +183,9 @@ async function signin(req, res) {
     } else if (user.status === "beneficiary") {
       const beneficiary = await Beneficiary.findOne({ user_id: user._id });
       res.status(200).json({ user: user, beneficiary: beneficiary });
+    } else if (user.status === "crewmember") {
+      const crewMember = await CrewMember.findOne({ user_id: user._id });
+      res.status(200).json({ user: user, crewMember: crewMember });
     } else {
       res.status(200).json({ user: user });
     }
@@ -170,5 +222,6 @@ module.exports = {
   signout,
   signup,
   beneficiary_registration,
+  crewMember_registration,
   checkAuth,
 };

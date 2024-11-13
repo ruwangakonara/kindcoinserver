@@ -17,58 +17,35 @@ const adminSchema = new Schema({
     required: true,
     unique: true,
   },
-  address: {
-    type: String,
-    // required: true
-  },
-  images: {
-    type: [String],
-    default: [],
-  },
   profile_image: {
     type: String,
     default: "https://via.placeholder.com/150",
   },
-  description: {
-    type: String,
-    // required: true
-  },
-  type: {
-    type: String,
-    // enum: ['organization', 'individual'],
-    required: true,
-  },
+  // type: {
+  //   type: String,
+  //   // enum: ['organization', 'individual'],
+  //   required: true,
+  // },
   date_of_birth: {
     type: Date,
     // required: true
   },
 
-  stellar_address: {
-    type: String,
-  },
+  // stellar_address: {
+  //   type: String,
+  // },
 
-  district: {
+  // district: {
+  //   type: String,
+  // },
+  phoneNo: {
     type: String,
+    required: true,
   },
 
   created_at: {
     type: Date,
     default: Date.now,
-  },
-  phoneNo: {
-    type: String,
-    required: true,
-  },
-  usual_donations: {
-    type: [String],
-  },
-  donated: {
-    type: Number,
-    default: 0,
-  },
-  tokens: {
-    type: Number,
-    default: 0,
   },
 });
 

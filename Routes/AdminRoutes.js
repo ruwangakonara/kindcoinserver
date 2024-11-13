@@ -1,7 +1,9 @@
 // view all users
+// view all crew members
+// view all beneficiaries
+// view all donors
 // view all donations
 // view all tokens
-// view all beneficiaries
 // view all requests
 // remove unethical recipients
 
