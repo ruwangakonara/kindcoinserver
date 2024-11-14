@@ -2,6 +2,7 @@ const User = require("../../models/user");
 const Donor = require("../../models/donor");
 const Beneficiary = require("../../models/beneficiary");
 const CrewMember = require("../../models/crew_member");
+const Admin = require("../../models/admin");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -104,18 +105,17 @@ async function beneficiary_registration(req, res) {
 async function crewMember_registration(req, res) {
   try {
     console.log("Crew Mem Registration Start");
-    // status has to be "crewMember"
+    // status has to be "crewmember" - it has to be come through the payload actually. tested through api client.
+    // status = "crewmember";
     const {
       name,
-      username,
+      noOfOperations,
       stellarid,
       town,
-      // images,
       profile_image,
       certificate_image,
-      email,
       phoneNo,
-      noOfOperations,
+      username,
       password,
       status,
     } = req.body;
@@ -129,19 +129,49 @@ async function crewMember_registration(req, res) {
     const crewMember = await CrewMember.create({
       user_id,
       name,
-      username,
+      noOfOperations,
       stellarid,
       town,
-      // images,
       profile_image,
       certificate_image,
-      email,
       phoneNo,
-      noOfOperations,
       created_at,
     });
     console.log("Crew Member Succesfully registered");
     console.log(crewMember);
+    res.sendStatus(200);
+  } catch (err) {
+    res.sendStatus(400);
+    console.log(err);
+  }
+}
+
+// temporary function
+async function admin_signup(req, res) {
+  try {
+    console.log("admin signup Start");
+    // status has to be "admin" - it has to be come through the payload actually.
+    // status = "admin";
+    // profile_image = "";
+    const { name, username, profile_image, phoneNo, password, status } =
+      req.body;
+
+    const hashedpass = bcrypt.hashSync(password, 8);
+
+    const user = await User.create({ username, password: hashedpass, status });
+
+    const user_id = user._id;
+    const created_at = Date.now();
+    const admin = await Admin.create({
+      user_id,
+      name,
+      username,
+      profile_image,
+      phoneNo,
+      created_at,
+    });
+    console.log("Admin Succesfully signup");
+    console.log(admin);
     res.sendStatus(200);
   } catch (err) {
     res.sendStatus(400);
@@ -184,10 +214,13 @@ async function signin(req, res) {
       const beneficiary = await Beneficiary.findOne({ user_id: user._id });
       res.status(200).json({ user: user, beneficiary: beneficiary });
     } else if (user.status === "crewmember") {
+      console.log("crew member signin");
       const crewMember = await CrewMember.findOne({ user_id: user._id });
       res.status(200).json({ user: user, crewMember: crewMember });
     } else {
-      res.status(200).json({ user: user });
+      const admin = await Admin.findOne({ user_id: user._id });
+      console.log("admin signin");
+      res.status(200).json({ user: user, admin: admin });
     }
   } catch (err) {
     console.log(err);
@@ -206,10 +239,10 @@ function checkAuth(req, res) {
 }
 
 function signout(req, res) {
-  console.log("Ma Niggax!!");
-
+  console.log("Sign out in");
   try {
     res.clearCookie("Authorization");
+    console.log("Sign out successfully");
     res.sendStatus(200);
   } catch (err) {
     console.log(err);
@@ -223,5 +256,6 @@ module.exports = {
   signup,
   beneficiary_registration,
   crewMember_registration,
+  admin_signup,
   checkAuth,
 };

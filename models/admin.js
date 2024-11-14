@@ -7,7 +7,6 @@ const adminSchema = new Schema({
     ref: "User",
     required: true,
   },
-
   name: {
     type: String,
     required: true,
@@ -21,28 +20,14 @@ const adminSchema = new Schema({
     type: String,
     default: "https://via.placeholder.com/150",
   },
-  // type: {
+  // email: {
   //   type: String,
-  //   // enum: ['organization', 'individual'],
   //   required: true,
-  // },
-  date_of_birth: {
-    type: Date,
-    // required: true
-  },
-
-  // stellar_address: {
-  //   type: String,
-  // },
-
-  // district: {
-  //   type: String,
   // },
   phoneNo: {
     type: String,
     required: true,
   },
-
   created_at: {
     type: Date,
     default: Date.now,
@@ -52,3 +37,15 @@ const adminSchema = new Schema({
 const Admin = mongoose.model("Admin", adminSchema);
 
 module.exports = Admin;
+
+/**
+ * 
+ * SAVED ADMIN
+{
+  "name":"Chamal",
+  "username":"chamalferdy@gmail.com",
+  "phoneNo":"0741519337",
+  "password":"ferdy@123",
+  "status":"admin"
+}
+ */

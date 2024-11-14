@@ -10,12 +10,13 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const fs = require("fs");
 const mongo_connect = require("./config/mongo_connect");
+// required controllers
 const NoteController = require("./controllers/NoteController");
 const homeRoutes = require("./routes/HomeRoutes");
 const donorRoutes = require("./routes/DonorRoutes");
 const beneficiaryRoutes = require("./routes/BeneficiaryRoutes");
+const adminRoutes = require("./Routes/AdminRoutes");
 // const uploader = require("./Middleware/Donor/uploader"); // Adjust the path based on your folder structure
-// const adminRoutes = require("./Routes/AdminRoutes");
 
 const app = express();
 
@@ -109,6 +110,7 @@ app.delete("/notes/:id", NoteController.deleteNote);
 app.use("/", homeRoutes);
 app.use("/donor", donorRoutes);
 app.use("/beneficiary", beneficiaryRoutes);
+app.use("/admin", adminRoutes);
 
 app.get("/notes/:id", NoteController.getNote);
 
@@ -121,5 +123,3 @@ app.delete("/notes/:id", NoteController.deleteNote);
 app.listen(process.env["PORT"]);
 
 // app.use(userRoutes);
-
-// app.use("/admin", adminRoutes)

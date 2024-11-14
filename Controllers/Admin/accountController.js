@@ -61,6 +61,6 @@ async function get_account(req, res) {
 }
 
 module.exports = {
-  updateDonor,
+  updateAdmin,
   get_account,
 };

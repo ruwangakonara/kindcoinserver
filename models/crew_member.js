@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose; // This line is missing
 
 const crewSchema = new mongoose.Schema({
   user_id: {
@@ -6,15 +7,14 @@ const crewSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-
   name: {
     type: String,
     required: true,
   },
-  username: {
-    type: String,
+  noOfOperations: {
+    type: Number,
     required: true,
-    unique: true,
+    default: 0,
   },
   stellarid: {
     type: String,
@@ -24,10 +24,6 @@ const crewSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  //   images: {
-  //     type: [String],
-  //     default: [],
-  //   },
   profile_image: {
     type: String,
     default: "https://via.placeholder.com/150",
@@ -36,19 +32,9 @@ const crewSchema = new mongoose.Schema({
     type: String,
     default: "https://via.placeholder.com/150",
   },
-  email: {
-    type: String,
-    required: true,
-  },
-
   phoneNo: {
     type: String,
     required: true,
-  },
-  noOfOperations: {
-    type: Number,
-    required: true,
-    default: 0,
   },
   created_at: {
     type: Date,
@@ -59,3 +45,18 @@ const crewSchema = new mongoose.Schema({
 const CrewMember = mongoose.model("CrewMember", crewSchema);
 
 module.exports = CrewMember;
+
+/**
+ * TESTED EXAMPLE
+ *
+ {
+  "name":"Andrew NG",
+  "noOfOperations":1,
+  "stellarid":"stellar@1211432idufo",
+  "town":"Polonnaruwa",
+  "phoneNo":"0718993252",
+  "username":"crewmem@kindcoin.net",
+  "password":"crewMem@123",
+  "status":"crewmember"
+}
+ */
