@@ -11,7 +11,7 @@ async function updateAdmin(req, res) {
     const { user_id, donor_id, address, usual_donations, name, description } =
       req.body;
 
-    const donor = await Donor.findById(req.body.donor_id);
+    const donor = await Admin.findById(req.body.donor_id);
 
     if (!donor) {
       return res.status(404).json({ error: "Donor not found" });
