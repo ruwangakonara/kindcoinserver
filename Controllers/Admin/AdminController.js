@@ -39,7 +39,7 @@ const getAllRequests = async (req, res) => {
 };
 
 module.exports = {
-  getAllDonations,
-  getAllBeneficiaries,
-  getAllRequests,
+  // getAllDonations,
+  // getAllBeneficiaries,
+  // getAllRequests,
 };

@@ -208,9 +208,11 @@ async function signin(req, res) {
 
     // Include the user in the response body
     if (user.status === "donor") {
+      console.log("donor signin");
       const donor = await Donor.findOne({ user_id: user._id });
       res.status(200).json({ user: user, donor: donor });
     } else if (user.status === "beneficiary") {
+      console.log("beneficiary signin");
       const beneficiary = await Beneficiary.findOne({ user_id: user._id });
       res.status(200).json({ user: user, beneficiary: beneficiary });
     } else if (user.status === "crewmember") {
