@@ -1,5 +1,4 @@
 const Admin = require("../../models/admin");
-const Donation = require("../../models/donation");
 
 const path = require("path");
 const fs = require("fs");
@@ -11,13 +10,13 @@ async function updateAdmin(req, res) {
     const { user_id, donor_id, address, usual_donations, name, description } =
       req.body;
 
-    const donor = await Admin.findById(req.body.donor_id);
+    const admin = await Admin.findById(req.body.donor_id);
 
-    if (!donor) {
-      return res.status(404).json({ error: "Donor not found" });
+    if (!admin) {
+      return res.status(404).json({ error: "Admin not found" });
     }
 
-    if (donor.user_id.toString() !== req.sub) {
+    if (admin.user_id.toString() !== req.sub) {
       return res.status(403).json({ error: "Unauthorized" });
     }
 
@@ -29,7 +28,7 @@ async function updateAdmin(req, res) {
       profile_image: filename,
     };
 
-    const updatedDonor = await Donor.findByIdAndUpdate(donor_id, updatedData, {
+    const updatedDonor = await Admin.findByIdAndUpdate(donor_id, updatedData, {
       new: true,
     });
 
@@ -46,13 +45,13 @@ async function updateAdmin(req, res) {
   }
 }
 
-async function get_account(req, res) {
+async function getAdminAccount(req, res) {
   try {
     const user_id = req.sub;
     // if(user_id !== req.sub){
     //     return res.status(400).send()
     // }
-    const donor = await Donor.findOne({ user_id });
+    const admin = await Admin.findOne({ user_id });
     res.status(200).json({ donor: donor });
   } catch (error) {
     console.log(error);
@@ -62,5 +61,5 @@ async function get_account(req, res) {
 
 module.exports = {
   updateAdmin,
-  get_account,
+  getAdminAccount,
 };
