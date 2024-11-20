@@ -80,6 +80,11 @@ const requestSchema = new mongoose.Schema({
     raised:{
         type: Number,
         default:0
+    },
+    status: {
+        type: String,
+        enum: ['Pending', 'Published', 'Rejected'],
+        default: 'Pending'
     }
 })
 
