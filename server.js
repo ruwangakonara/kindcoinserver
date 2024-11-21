@@ -15,25 +15,15 @@ const NoteController = require("./controllers/NoteController");
 const homeRoutes = require("./routes/HomeRoutes");
 const donorRoutes = require("./routes/DonorRoutes");
 const beneficiaryRoutes = require("./routes/BeneficiaryRoutes");
-<<<<<<< HEAD
-<<<<<<< HEAD
 const uploader = require("./Middleware/Donor/uploader"); // Adjust the path based on your folder structure
 // const adminRoutes = require("./Routes/AdminRoutes");
-const crewRoutes = require("./Routes/CrewRoutes");
-=======
-const adminRoutes = require("./Routes/AdminRoutes");
-// const uploader = require("./Middleware/Donor/uploader"); // Adjust the path based on your folder structure
->>>>>>> f5c9a71516a0c7820263b07333a71f50f9568b38
-=======
-
-const uploader = require("./Middleware/Donor/uploader"); // Adjust the path based on your folder structure
-// const adminRoutes = require("./Routes/AdminRoutes");
-const crewRoutes = require("./Routes/CrewRoutes");
-
+const crewRoutes = require("./Routes/CrewMemberRoutes");
 const adminRoutes = require("./Routes/AdminRoutes");
 // const uploader = require("./Middleware/Donor/uploader"); // Adjust the path based on your folder structure
 
->>>>>>> 56ce4aebfe79a587a14c1f542191c4890da4a9c0
+
+// const adminRoutes = require("./Routes/AdminRoutes");
+
 
 const app = express();
 
@@ -127,19 +117,13 @@ app.delete("/notes/:id", NoteController.deleteNote);
 app.use("/", homeRoutes);
 app.use("/donor", donorRoutes);
 app.use("/beneficiary", beneficiaryRoutes);
-<<<<<<< HEAD
-<<<<<<< HEAD
 app.use("/crew", crewRoutes);
-=======
 app.use("/admin", adminRoutes);
->>>>>>> f5c9a71516a0c7820263b07333a71f50f9568b38
-=======
 
 app.use("/crew", crewRoutes);
 
 app.use("/admin", adminRoutes);
 
->>>>>>> 56ce4aebfe79a587a14c1f542191c4890da4a9c0
 
 app.get("/notes/:id", NoteController.getNote);
 
