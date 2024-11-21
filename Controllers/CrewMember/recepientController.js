@@ -1,4 +1,4 @@
-const Recepients = require("../models/beneficiary");
+const Recepients = require("../../models/beneficiary");
 
 // Fetch all requests
 async function getAllBeneficiaries(req, res) {

@@ -1,4 +1,4 @@
-const Donation = require("../models/donation");
+const Donation = require("../../models/donation");
 
 // Fetch all requests
 async function getAllDonations(req, res) {
