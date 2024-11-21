@@ -1,5 +1,6 @@
-const Donation = require("../../models/donation");
-const request = require("../../Controllers/Beneficiary/RequestController");
+const donation = require("./donation_cycle_break")
+const Donation = donation.Donation
+const request = require("../Beneficiary/request_cycle_breaker");
 
 const Request = request.Request
 const beneficiary = require("../../Controllers/Home/UserController")
@@ -168,6 +169,7 @@ async function getDonation(req, res) {
 
         const donation = await Donation.findOne(req.body);
 
+
         const request = await  Request.findById(donation.request_id);
         const beneficiary = await  Beneficiary.findById(donation.beneficiary_id);
 
@@ -184,6 +186,7 @@ async function getDonation(req, res) {
         res.status(200).json({donation: donation, request: request, beneficiary: beneficiary});
     } catch(err){
 
+        console.log("lop")
         res.status(400).json({error: err.message});
 
     }
@@ -344,6 +347,6 @@ module.exports = {
     getDonation,
     getDonations,
     updateImages,
-    Donation,
-    updateDocTraID
+    updateDocTraID,
+    Member
 }

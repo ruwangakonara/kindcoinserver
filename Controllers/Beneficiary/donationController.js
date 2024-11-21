@@ -1,11 +1,15 @@
-const donation = require("../../Controllers/Donor/DonationController");
+const donation = require("../../Controllers/Donor/donation_cycle_break");
 const Donation = donation.Donation
-// const Request = require("../../models/request");
+const request = require("./RequestController")
+const Request = request.Request
 const mongoose = require("mongoose");
+const dnation = require("../Home/UserController");
+const Member = donation.Member;
+const Donor = dnation.Donor;
 
 async function getDonationsWithDonorDetails(filterCriteria) {
     try {
-        // console.log(filterCriteria);
+        console.log(filterCriteria);
         const results = await Donation.aggregate([
             {
                 $match: filterCriteria // Apply filter criteria
@@ -26,14 +30,13 @@ async function getDonationsWithDonorDetails(filterCriteria) {
                 $project: {
                     donationDetails: '$$ROOT',
                     donor_id: '$donorDetails._id',
-                    name: 'donorDetails.name',
+                    name: '$donorDetails.name',
                     profile_image: '$donorDetails.profile_image',
                     // beneficiaryAddress: '$beneficiaryDetails.address'
                 }
             }
         ]);
 
-        console.log(results);
 
         return results;
 
@@ -47,6 +50,9 @@ async function getDonationsWithDonorDetails(filterCriteria) {
 async function getDonations2(req, res) {
 
     try{
+
+        req.body.request_id  =  new mongoose.Types.ObjectId(req.body.request_id);
+
         const donations = await getDonationsWithDonorDetails(req.body);
         console.log(donations);
 
@@ -97,12 +103,45 @@ async function getDonationyo(req, res) {
     }
 }
 
+async function getDonation(req, res) {
+    try{
+
+        const donation = await Donation.findOne(req.body);
+
+
+        const request = await  Request.findById(donation.request_id);
+
+        const donor = await  Donor.findById(donation.donor_id);
+
+        if(donation.type === "goods" && donation.member_id){
+            const member = await Member.findById(donation.member_id);
+
+            console.log("arse")
+            res.status(200).json({donation: donation, request: request, donor: donor, member: member});
+            return
+        }
+
+
+        console.log("hello")
+        res.status(200).json({donation: donation, request: request, donor: donor});
+    } catch(err){
+
+        res.status(400).json({error: err.message});
+
+    }
+}
+
 async function acceptDonation(req, res){
 
     try{
-        await Donation.findByIdAndUpdate(req.body.request_id, {accepted: req.body.accepted})
-    } catch (error) {
+        await Donation.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.donation_id), {accepted:true})
 
+        console.log("bae")
+
+        res.status(200).json({success: true});
+
+    } catch (error) {
+        res.status(400).json({error: error.message});
     }
 }
 
@@ -110,4 +149,5 @@ module.exports = {
     getDonationyo,
     getDonations2,
     acceptDonation,
+    getDonation
 }

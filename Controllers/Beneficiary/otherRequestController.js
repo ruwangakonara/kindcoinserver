@@ -1,5 +1,5 @@
-const request = require("../../Controllers/Beneficiary/RequestController")
-const  Request = request.Request
+const request = require("./request_cycle_breaker")
+const Request = request.Request
 const beneficiary = require("../../Controllers/Home/UserController")
 const mongoose = require("mongoose");
 const Beneficiary = beneficiary.Beneficiary
