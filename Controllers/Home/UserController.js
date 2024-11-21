@@ -15,7 +15,7 @@ async function signup(req, res) {
 
 
         const user = await User.create({username, password: hashedpass, status})
-
+        console.log("done")
         const user_id = user._id
 
         // const {} = req.body;
@@ -34,6 +34,7 @@ async function signup(req, res) {
 
         res.sendStatus(200)
     } catch (err){
+        console.log(err)
         res.sendStatus(400);
     }
 

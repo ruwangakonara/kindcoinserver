@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const mongooseSequence = require('mongoose-sequence')(mongoose);
+
 
 const donorSchema = new Schema({
     user_id: {
@@ -31,6 +33,7 @@ const donorSchema = new Schema({
     },
     description: {
         type: String,
+        default: ""
         // required: true
     },
     type: {
@@ -44,7 +47,8 @@ const donorSchema = new Schema({
     },
 
     stellar_address:{
-        type: String
+        type: String,
+        default: ""
     },
 
     district:{
@@ -69,11 +73,60 @@ const donorSchema = new Schema({
     tokens:{
         type:Number,
         default:0
-    }
+    },
+
+    anonymous:{
+    type:Boolean,
+        default:true
+    },
+
+    anonymous_id:{
+        type: Number,
+        // required: true
+    },
     // updated_at: {
     //     type: Date,
     //     default: Date.now
     // }
+
+    image1: {
+        type: String,
+        default: 'https://via.placeholder.com/300',
+        required: true
+    },
+
+    image2: {
+        type: String,
+        default: 'https://via.placeholder.com/300',
+        required: true
+    },
+
+    image3: {
+        type: String,
+        default: 'https://via.placeholder.com/300',
+        required: true
+    },
+    image4: {
+        type: String,
+        default: 'https://via.placeholder.com/300'
+
+    },
+    image5: {
+        type: String,
+        default: 'https://via.placeholder.com/300'
+    },
+
+    no_donations:{
+
+        type: Number,
+        default:0
+
+    }
+});
+
+donorSchema.plugin(mongooseSequence,{
+    inc_field: "anonymous_id",
+    start_seq: 5
 });
 
 const Donor = mongoose.model('Donor', donorSchema);

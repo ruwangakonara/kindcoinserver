@@ -1,5 +1,8 @@
-const Request = require("../../models/Request");
+const request = require("./request_cycle_breaker")
+const Request = request.Request
 const mongoose = require("mongoose");
+const donation = require("../Donor/DonationController")
+const  Donation = donation.Donation
 
 async function createRequest(req, res) {
 
@@ -109,6 +112,27 @@ async function getMyRequests(req, res) {
 
 }
 
+async function closeRequest(req, res){
+
+    try{
+
+        const id = req.body.request_id;
+
+        const donations = await Donation.find({verified: true, request_id: id})
+
+        const value = donations.reduce((sum, donation) => sum + donation.value, 0)
+
+        const updatedReq = await Request.findByIdAndUpdate(id, {open: false, raised: value}, { new: true })
+
+        res.sendStatus(200)
+
+    }catch(err){
+
+        res.status(400).json({error: err.message});
+
+    }
+}
+
 async function getRequest(req, res) {
     try{
 
@@ -162,4 +186,5 @@ module.exports = {
     getRequest,
     getMyRequests,
     Request,
+    closeRequest
 }

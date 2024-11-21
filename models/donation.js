@@ -75,6 +75,7 @@ const donationSchema = new mongoose.Schema({
 
     value:{
         type: Number,
+        default: 0
     },
 
     images: {
@@ -102,6 +103,7 @@ const donationSchema = new mongoose.Schema({
 
     token_amount:{
         type: Number,
+        default: 0
    },
 
     doc_token_amount:{

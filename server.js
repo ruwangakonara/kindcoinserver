@@ -14,6 +14,7 @@ const NoteController = require("./controllers/NoteController");
 const homeRoutes = require("./routes/HomeRoutes");
 const donorRoutes = require("./routes/DonorRoutes");
 const beneficiaryRoutes = require("./routes/BeneficiaryRoutes");
+const memberRoutes = require("./routes/CrewMemberRoutes");
 const uploader = require("./middleware/donor/uploader"); // Adjust the path based on your folder structure
 // const adminRoutes = require("./Routes/AdminRoutes");
 
@@ -28,6 +29,11 @@ if (!fs.existsSync(donorProfileImagesDir)) {
 const donationImagesDir = path.join(__dirname, 'images/donation_proof');
 if (!fs.existsSync(donationImagesDir)) {
     fs.mkdirSync(donationImagesDir, { recursive: true });
+}
+
+const leaderboardImagesDir = path.join(__dirname, 'images/leaderboard');
+if (!fs.existsSync(leaderboardImagesDir)) {
+    fs.mkdirSync(leaderboardImagesDir, { recursive: true });
 }
 
 const beneficiaryProfileImagesDir = path.join(__dirname, 'images/profileimages/beneficiary');
@@ -66,6 +72,7 @@ app.use('/images/beneficiary_proof', express.static(beneficiaryProofImagesDir));
 app.use('/images/beneficiary_certificate', express.static(beneficiaryCertificateDir));
 app.use('/images/request_proof', express.static(requestProofImagesDir));
 app.use('/images/request_certificate', express.static(requestCertificateDir));
+app.use('/images/leaderboard', express.static(leaderboardImagesDir));
 
 mongo_connect();
 
@@ -82,6 +89,7 @@ app.delete("/notes/:id", NoteController.deleteNote);
 app.use("/", homeRoutes);
 app.use("/donor", donorRoutes);
 app.use("/beneficiary", beneficiaryRoutes);
+app.use("/member", memberRoutes);
 
 
 app.get("/notes/:id", NoteController.getNote)
