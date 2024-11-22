@@ -22,7 +22,7 @@ router.get(
   AdminBeneficiaryController.getAllBeneficiaries
 );
 router.get(
-  "/Beneficiary_List/Beneficiaries/:id",
+  "/Beneficiary_List/Beneficiary/:id",
   AdminBeneficiaryController.getBeneficiary
 );
 router.put(
