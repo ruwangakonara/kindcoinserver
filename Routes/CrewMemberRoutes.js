@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+
+const requireMemberAuth = require('../Middleware/CrewMember/requireMemberAuth');
 const requireMemberAuth = require("../Middleware/CrewMember/RequireMemberAuth");
 const requireCrewMemberAuth = require('../Middleware/CrewMember/requireMemberAuth');
 
@@ -8,6 +10,7 @@ const TokenController = require("../Controllers/CrewMember/tokenController2")
 const donationProof = require("../Controllers/CrewMember/donationProof");
 const recepientController = require("../Controllers/CrewMember/recepientController");
 const requestController = require("../Controllers/CrewMember/RequestController");
+
 
 
 router.post("/transfer", TokenController.transfer)
