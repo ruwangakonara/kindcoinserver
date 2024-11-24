@@ -5,6 +5,7 @@ const CrewMember = require("../../models/crew_member");
 const Admin = require("../../models/admin");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Member = require("../../models/member");
 
 async function signup(req, res) {
   console.log(req.body);
@@ -264,4 +265,7 @@ module.exports = {
   crewMember_registration,
   admin_signup,
   checkAuth,
+  Beneficiary,
+  Donor,
+  Member
 };

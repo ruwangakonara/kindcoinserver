@@ -1,9 +1,13 @@
 const axios = require("axios");
 const Donor = require("../Home/UserController").Donor
 const Donation = require("../Donor/donation_cycle_break").Donation
+const Request = require("../Beneficiary/request_cycle_breaker").Request
+const DonorNotification = require("../Donor/donation_cycle_break").DonorNotification
 
 const { Horizon, Networks, Asset, BASE_FEE, TransactionBuilder, Operation, Keypair } = require("@stellar/stellar-sdk");
 const mongoose = require("mongoose");
+const {request} = require("axios");
+const {Beneficiary} = require("../Home/UserController");
 // const {} = require("@stellar/stellar-sdk");
 
 const server = new Horizon.Server('https://horizon-testnet.stellar.org');
@@ -136,6 +140,21 @@ async function transfer(req, res) {
         const updated_donation = await Donation.findByIdAndUpdate(donation_id, { token_amount: tokenAmount, rewarded: true, xlmToLkrRate, tokenToXlmRate }, {new: true});
         const updated_donor = await  Donor.findByIdAndUpdate(donor._id, {$inc:{tokens: tokenAmount}}, {new: true})
 
+        //notify
+        const request = await Request.findByID(updated_donation.request_id);
+        const beneficiary = await Beneficiary.findById(request.beneficiary_id);
+
+
+        const notification = {
+            title:"KINDCOIN Transferred",
+            donor_id: updated_donor._id,
+            beneficiary_id: beneficiary._id,
+            request_id: request._id,
+            donation_id: updated_donation._id,
+        }
+        await DonorNotification.create(notification)
+
+        //
         res.status(200).json({ message: 'Donation successfully transferred', transactionResult, updated_donor, updated_donation });
     } catch (error) {
         console.error('Error transferring donation:', error);

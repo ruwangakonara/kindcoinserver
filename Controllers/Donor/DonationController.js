@@ -6,8 +6,9 @@ const Request = request.Request
 const beneficiary = require("../../Controllers/Home/UserController")
 const mongoose = require("mongoose");
 const Beneficiary = beneficiary.Beneficiary
+const BeneficiaryNotification = require("../Beneficiary/request_cycle_breaker").BeneficiaryNotification
 
-const Member = require("../../Models/Member");
+const Member = require("../../Controllers/Home/UserController").Member;
 
 
 // async function createDonation(req, res) {
@@ -47,6 +48,20 @@ async function createDonation(req, res) {
             const request_id = new mongoose.Types.ObjectId(req.body.request_id)
             const beneficiary_id = new mongoose.Types.ObjectId(req.body.beneficiary_id)
             const donation = await Donation.create({user_id, donor_id, title, description, goods, request_id, beneficiary_id, type});
+
+            //notify
+
+            const notification = {
+                title:"New Donation Listed",
+                donor_id: donor_id,
+                beneficiary_id: beneficiary_id,
+                request_id: request_id,
+                donation_id: donation._id,
+            }
+            await BeneficiaryNotification.create(notification)
+
+            //
+
             res.status(201).json({donation: donation});
 
 
@@ -59,6 +74,22 @@ async function createDonation(req, res) {
             const request_id = new mongoose.Types.ObjectId(req.body.request_id)
             const beneficiary_id = new mongoose.Types.ObjectId(req.body.beneficiary_id)
             const donation = await Donation.create({user_id, donor_id, beneficiary_id, title, description, value, request_id, type});
+
+
+            //notify
+
+            const notification = {
+                title:"New Donation Listed",
+                donor_id: donor_id,
+                beneficiary_id: beneficiary_id,
+                request_id: request_id,
+                donation_id: donation._id,
+            }
+            await BeneficiaryNotification.create(notification)
+
+            //
+
+
             res.status(201).json({donation: donation});
 
         }
@@ -168,10 +199,13 @@ async function getDonation(req, res) {
     try{
 
         const donation = await Donation.findOne(req.body);
-
+        console.log(donation)
 
         const request = await  Request.findById(donation.request_id);
+        console.log("passed")
+
         const beneficiary = await  Beneficiary.findById(donation.beneficiary_id);
+        console.log("passed bene")
 
         if(donation.type === "goods" && donation.member_id){
             const member = await Member.findById(donation.member_id);

@@ -13,6 +13,7 @@ const ticketController = require('../Controllers/Donor/ticketController');
 const userController = require("../Controllers/Donor/userController");
 const homeController = require("../Controllers/Donor/HomeController.jsx");
 const LeaderboardController = require("../Controllers/Donor/leadeboardController");
+const NotificationController = require("../Controllers/Donor/notificationController");
 
 
 router.post("/maintenance_done", requireDonorAuth, maintenanceController.maintenance_done);
@@ -60,6 +61,8 @@ router.get("/get_donor_cards", requireDonorAuth, homeController.DonorCards)
 router.get("/get_home_requests", requireDonorAuth, homeController.homeRequests)
 
 router.get("/get_home_donors", requireDonorAuth, homeController.getDonors)
+router.get("/get_notifications", requireDonorAuth, NotificationController.getNotifications)
+router.get("/mark_as_viewed", requireDonorAuth, NotificationController.markAsViewed)
 
 router.get("/get_leader_donors", requireDonorAuth, LeaderboardController.getDonors)
 router.post("/get_leader_donor",requireDonorAuth, LeaderboardController.getDonor)

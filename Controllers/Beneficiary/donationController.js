@@ -1,11 +1,15 @@
 const donation = require("../../Controllers/Donor/donation_cycle_break");
 const Donation = donation.Donation
-const request = require("./RequestController")
-const Request = request.Request
+// const request = require("./RequestController")
+// const Request = request.Request
+const Request = require("./request_cycle_breaker").Request
 const mongoose = require("mongoose");
-const dnation = require("../Home/UserController");
-const Member = donation.Member;
-const Donor = dnation.Donor;
+const users = require("../Home/UserController");
+const {Beneficiary} = require("../Home/UserController");
+const {request} = require("axios");
+const Member = users.Member;
+const Donor = users.Donor;
+const DonorNotification = require("../Donor/donation_cycle_break").DonorNotification;
 
 async function getDonationsWithDonorDetails(filterCriteria) {
     try {
@@ -114,9 +118,10 @@ async function getDonation(req, res) {
         const donor = await  Donor.findById(donation.donor_id);
 
         if(donation.type === "goods" && donation.member_id){
+            console.log("ratton")
             const member = await Member.findById(donation.member_id);
 
-            console.log("arse")
+            console.log("gorm")
             res.status(200).json({donation: donation, request: request, donor: donor, member: member});
             return
         }
@@ -134,13 +139,29 @@ async function getDonation(req, res) {
 async function acceptDonation(req, res){
 
     try{
-        await Donation.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.donation_id), {accepted:true})
+
+        const donation = await Donation.findByIdAndUpdate(new mongoose.Types.ObjectId(req.body.donation_id), {accepted:true}, {new: true})
+        console.log("found donation")
+        const request = await Request.findById(donation.request_id)
+        console.log("found request")
+        const beneficiary = await Beneficiary.findById(request.beneficiary_id);
+
+        const notification = {
+            title:"Donation Accepted",
+            donor_id: donation.donor_id,
+            beneficiary_id: beneficiary._id,
+            request_id: request._id,
+            donation_id: donation._id
+        }
+
+        await DonorNotification.create(notification)
 
         console.log("bae")
 
         res.status(200).json({success: true});
 
     } catch (error) {
+        console.log(error)
         res.status(400).json({error: error.message});
     }
 }
