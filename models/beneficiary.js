@@ -44,7 +44,7 @@ const beneficairySchema = new Schema({
 
     profile_image: {
         type: String,
-        default: 'https://via.placeholder.com/300'
+        default: 'https://via.placeholder.com/150'
     },
     certificate_image: {
         type: String,

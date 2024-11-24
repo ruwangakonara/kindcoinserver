@@ -9,9 +9,9 @@ const fs = require("fs")
 
 async function updateDonor(req, res) {
     try {
-        const { filename } = req.file;
+        const  filename  = req.file ? req.file.filename : undefined;
         console.log(filename)
-        const {user_id, donor_id, address, usual_donations, name, description } = req.body;
+        const {user_id, donor_id, address, usual_donations, name, description, anonymous, stellar_address } = req.body;
 
         const donor = await Donor.findById(req.body.donor_id);
 
@@ -23,14 +23,19 @@ async function updateDonor(req, res) {
             return res.status(403).json({ error: 'Unauthorized' });
         }
 
+
         const updatedData = {
             description,
             address,
             usual_donations,
             name,
-            profile_image: filename,
+            anonymous,
+            stellar_address
         };
 
+        if (filename){
+            updatedData.profile_image = filename;
+        }
         const updatedDonor = await Donor.findByIdAndUpdate(donor_id, updatedData, { new: true });
 
         console.log()

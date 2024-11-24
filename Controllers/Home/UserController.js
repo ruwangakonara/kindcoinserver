@@ -27,32 +27,36 @@ async function signup(req, res) {
 
     const user_id = user._id;
 
-    // const {} = req.body;
+        // const user = await User.create({username, password: hashedpass, status})
+        console.log("done")
+        // const user_id = user._id
 
-    // if(type === "individual"){
-    //     const {date_of_birth} = req.body
-    //     const donor = await Donor.create({user_id, name, username, district, type, date_of_birth, phoneNo})
-    //
-    // } else {
-    //     const {date_of_birth} = req.body x
+        // const {} = req.body;
 
-    const donor = await Donor.create({
-      user_id,
-      name,
-      username,
-      district,
-      type,
-      date_of_birth,
-      phoneNo,
-    });
-    console.log("Yo");
+        // if(type === "individual"){
+        //     const {date_of_birth} = req.body
+        //     const donor = await Donor.create({user_id, name, username, district, type, date_of_birth, phoneNo})
+        //
+        // } else {
+        //     const {date_of_birth} = req.body x
+
+            const donor = await Donor.create({user_id, name, username, district, type, date_of_birth, phoneNo})
+        console.log("Yo")
+
+        // }
+
+        res.sendStatus(200)
+    } catch (err){
+        console.log(err)
+        res.sendStatus(400);
+    }
 
     // }
-    res.sendStatus(200);
-  } catch (err) {
-    res.sendStatus(400);
-    console.log(err);
-  }
+  //   res.sendStatus(200);
+  // } catch (err) {
+  //   res.sendStatus(400);
+  //   console.log(err);
+  // }
 }
 
 async function beneficiary_registration(req, res) {
