@@ -52,7 +52,7 @@ async function getAdminAccount(req, res) {
     //     return res.status(400).send()
     // }
     const admin = await Admin.findOne({ user_id });
-    res.status(200).json({ donor: donor });
+    res.status(200).json({ admin: admin });
   } catch (error) {
     console.log(error);
     res.status(400).send();

@@ -6,8 +6,10 @@ const Donor = require("../../models/donor");
 async function getAllDonors(req, res) {
   try {
     const donors = await Donor.find();
+    console.log(donors);
     res.status(200).json({ donors: donors });
   } catch (error) {
+    console.log(error);
     res.status(500).send({ error: error.message });
   }
 }
@@ -16,8 +18,10 @@ async function getDonor(req, res) {
   try {
     const { user_id } = req.body;
     const donor = await Donor.findOne(user_id);
+    console.log(donor);
     res.status(200).json({ donor: donor });
   } catch (error) {
+    console.log(error);
     res.status(500).send({ error: error.message });
   }
 }
