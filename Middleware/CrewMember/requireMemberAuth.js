@@ -1,31 +1,30 @@
 const jwt = require("jsonwebtoken");
 const User = require("../../models/user");
-const constants = require("node:constants");
 
 async function requireMemberAuth(req, res, next) {
-   
-    try{
-        
+    try {
         const token = req.cookies.Authorization;
-        console.log(token)
+        if (!token) {
+            return res.sendStatus(401); // Unauthorized if no token is present
+        }
 
-        const decoded = jwt.verify(token, process.env["SECRET"])
+        const decoded = jwt.verify(token, process.env["SECRET"]);
+        if (Date.now() > decoded.exp * 1000) {
+            return res.sendStatus(401); // Unauthorized if token is expired
+        }
 
-        if(Date.now() > decoded.exp) res.sendStatus(401)
-
-        const user = await User.findById(decoded.sub)
-        if(!user || (user.status !== "crew_member")) return res.sendStatus(401)
+        const user = await User.findById(decoded.sub);
+        if (!user || user.status !== "crew_member") {
+            // return res.sendStatus(401); 
+            return res.redirect('/login');// Unauthorized if user is not found or not a crew member
+        }
 
         req.user = user;
         req.sub = decoded.sub;
-
-
-        next()
-        
+        next();
     } catch (err) {
-        return res.sendStatus(401)
+        return res.sendStatus(401); // Unauthorized if any error occurs
     }
-   
 }
 
-module.exports = requireMemberAuth
+module.exports = requireMemberAuth;

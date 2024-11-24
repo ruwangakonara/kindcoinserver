@@ -10,7 +10,7 @@ async function getAllRequests(req, res) {
         const sanitizedRequests = requests.map((request) => ({
             ...request._doc,
             user_id: request.user_id || { username: 'Unknown', email: 'Unknown' },
-            beneficiary_id: request.beneficiary_id || { username: 'Unknown', phoneNo: 'Unknown' },
+            beneficiary_id: request.beneficiary_id || { name: 'Unknown', phoneNo: 'Unknown' },
         }));
 
         res.status(200).json({ requests: sanitizedRequests });
@@ -30,6 +30,7 @@ async function updateRequestStatus(req, res) {
         }
         const updatedRequest = await Request.findByIdAndUpdate(requestId, { status }, { new: true });
         res.status(200).json({ request: updatedRequest });
+        console.log("Successfully updated request status", updatedRequest);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
