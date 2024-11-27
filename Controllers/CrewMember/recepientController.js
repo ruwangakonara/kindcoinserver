@@ -4,16 +4,15 @@ const Recepients = require("../../models/beneficiary");
 async function getAllBeneficiaries(req, res) {
     try {
         const benificiaries= await Recepients.find()
-        .populate('user_id', 'name nic')
-        .populate('beneficiary_id', 'phoneNo address');
+        .populate('user_id', 'name phoneNo address email username');
+        console.log("Successfully fetched requests", benificiaries);
         
-        const sanitizedRequests = requests.map((request) => ({
+        const sanitizedRequests = benificiaries.map((request) => ({
             ...request._doc,
-            user_id: request.user_id || { name: 'Unknown', email: 'Unknown' },
-            beneficiary_id: request.beneficiary_id || { address: 'Unknown', phoneNo: 'Unknown' },
+            user_id: request.user_id || { name: 'Unknown', email: 'Unknown' , address: 'Unknown', phoneNo: 'Unknown' },
         }));
 
-        res.status(200).json({ requests: sanitizedRequests });
+        res.status(200).json({ benificiaries: sanitizedRequests });
         console.log("Successfully fetched and sanitized requests", sanitizedRequests);
 
     } catch (err) {
