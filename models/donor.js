@@ -9,6 +9,10 @@ const donorSchema = new Schema({
         ref: 'User',
         required: true
     },
+    email_verified:{
+        type:Boolean,
+        default: false
+    },
 
     name: {
         type: String,

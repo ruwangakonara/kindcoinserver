@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// const requireMemberAuth = require('../Middleware/CrewMember/requireMemberAuth');
+const requireMemberAuth = require('../Middleware/CrewMember/requireMemberAuth');
+
 // const requireMemberAuth = require("../Middleware/CrewMember/RequireMemberAuth");
 const requireCrewMemberAuth = require('../Middleware/CrewMember/requireMemberAuth');
 

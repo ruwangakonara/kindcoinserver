@@ -95,7 +95,6 @@ async function homeRequests(req, res) {
                 dateAsInteger: request.created.getTime() // Converts the Date object to an integer (in milliseconds)
             };
         });
-        console.log(integers);
 
 // Sort the array based on 'dateAsInteger' in descending order
         const sortedRequests = integers.sort((a, b) => b.dateAsInteger - a.dateAsInteger);
