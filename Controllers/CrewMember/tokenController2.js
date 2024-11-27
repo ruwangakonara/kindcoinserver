@@ -137,11 +137,14 @@ async function transfer(req, res) {
 
         // Log and update the database
         console.log('Transaction successful:', transactionResult);
-        const updated_donation = await Donation.findByIdAndUpdate(donation_id, { token_amount: tokenAmount, rewarded: true, xlmToLkrRate, tokenToXlmRate }, {new: true});
+
+
+
+        const updated_donation = await Donation.findByIdAndUpdate(donation_id, { token_amount: tokenAmount, rewarded: true, xlmToLkrRate, tokenToXlmRate, attestation_fee: tokenAmount/4 }, {new: true});
         const updated_donor = await  Donor.findByIdAndUpdate(donor._id, {$inc:{tokens: tokenAmount}}, {new: true})
 
         //notify
-        const request = await Request.findByID(updated_donation.request_id);
+        const request = await Request.findById(updated_donation.request_id);
         const beneficiary = await Beneficiary.findById(request.beneficiary_id);
 
 

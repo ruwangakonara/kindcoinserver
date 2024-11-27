@@ -62,7 +62,8 @@ router.get("/get_home_requests", requireDonorAuth, homeController.homeRequests)
 
 router.get("/get_home_donors", requireDonorAuth, homeController.getDonors)
 router.get("/get_notifications", requireDonorAuth, NotificationController.getNotifications)
-router.get("/mark_as_viewed", requireDonorAuth, NotificationController.markAsViewed)
+router.get("/get_notifications_sidebar", requireDonorAuth, NotificationController.getNotificationV)
+router.post("/mark_as_viewed", requireDonorAuth, NotificationController.markAsViewed)
 
 router.get("/get_leader_donors", requireDonorAuth, LeaderboardController.getDonors)
 router.post("/get_leader_donor",requireDonorAuth, LeaderboardController.getDonor)

@@ -19,12 +19,13 @@ async function BeneficiaryCards(req, res) {
 
     // const verified = await Donation.find({user_id, verified: true})
     const amount = closedreq.reduce((sum, closedreqs) => sum + closedreqs.raised, 0);
+    const amount2 = openreq.reduce((sum, openreqs) => sum + openreqs.raised, 0);
 
     // var tokens = completed.reduce((sum, donation) => sum + donation.token_amount, 0);
     //
     // if (!tokens) tokens = 0
 
-    res.status(200).json({c_open, c_closed, amount})
+    res.status(200).json({c_open, c_closed, amount: amount + amount2})
 
 }
 

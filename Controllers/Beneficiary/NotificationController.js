@@ -1,10 +1,10 @@
-const DonorNotification = require("./donation_cycle_break").DonorNotification
-const Donor = require("../Home/UserController").Donor
+const BeneficiaryNotification = require("./request_cycle_breaker").BeneficiaryNotification
+const Beneficiary = require("../Home/UserController").Beneficiary
 const mongoose = require("mongoose")
 
-async function getNotificationsWithRequestBeneficiaryDonationDetails(filterCriteria) {
+async function getNotificationsWithRequestDonorDonationDetails(filterCriteria) {
     try {
-        const results = await DonorNotification.aggregate([
+        const results = await BeneficiaryNotification.aggregate([
             {
                 $match: filterCriteria // Apply filter criteria
             },
@@ -33,15 +33,15 @@ async function getNotificationsWithRequestBeneficiaryDonationDetails(filterCrite
             },
             {
                 $lookup: {
-                    from: 'beneficiaries', // Collection name for beneficiaries
-                    localField: 'beneficiary_id', // Change to the actual field name for beneficiary ID
+                    from: 'donors', // Collection name for beneficiaries
+                    localField: 'donor_id', // Change to the actual field name for beneficiary ID
                     foreignField: '_id',
-                    as: 'beneficiaryDetails' // Field to be populated
+                    as: 'donorDetails' // Field to be populated
                 }
             },
 
             {
-                $unwind: '$beneficiaryDetails' // Unwind the beneficiary details
+                $unwind: '$donorDetails' // Unwind the beneficiary details
             },
             {
                 $project: {
@@ -59,7 +59,7 @@ async function getNotificationsWithRequestBeneficiaryDonationDetails(filterCrite
                     // profile_image: '$donorDetails.profile_image',
                     // donor_name: '$donorDetails.name', // Add other fields as needed
                     notificationDetails:"$$ROOT",
-                    beneficiaryDetails:"$beneficiaryDetails",
+                    donorDetails:"$donorDetails",
                     donationDetails:"$donationDetails",
                     requestDetails:"$requestDetails",
                 }
@@ -80,12 +80,12 @@ async function getNotifications(req, res){
         const user_id = new mongoose.Types.ObjectId(req.sub)
         console.log(user_id)
 
-        const donor = await Donor.findOne({user_id})
-        donor_id = donor._id;
+        const beneficiary = await Beneficiary.findOne({user_id})
+        beneficiary_id = beneficiary._id;
 
-        console.log(donor_id);
+        console.log(beneficiary_id);
 
-        const notifications = await getNotificationsWithRequestBeneficiaryDonationDetails({donor_id});
+        const notifications = await getNotificationsWithRequestDonorDonationDetails({beneficiary_id});
         // console.log(notifications)
 
         res.status(200).json({notifications});
@@ -103,12 +103,12 @@ async function getNotificationV(req, res){
         const user_id = new mongoose.Types.ObjectId(req.sub)
         console.log("vallachia")
 
-        const donor = await Donor.findOne({user_id})
-        donor_id = donor._id;
+        const beneficiary = await Beneficiary.findOne({user_id})
+        beneficiary_id = beneficiary._id;
 
-        console.log(donor_id);
+        console.log(beneficiary_id);
 
-        const notifications = await DonorNotification.find({donor_id});
+        const notifications = await BeneficiaryNotification.find({beneficiary_id});
         // console.log(notifications)
 
         res.status(200).json({notifications});
@@ -125,23 +125,23 @@ async function markAsViewed(req, res){
 
     try{
         console.log("reid")
-        var {donor_id, notify_id} = req.body
+        var {beneficiary_id, notify_id} = req.body
 
         notify_id = new mongoose.Types.ObjectId(notify_id)
-        donor_id = new mongoose.Types.ObjectId(donor_id)
+        beneficiary_id = new mongoose.Types.ObjectId(beneficiary_id)
 
-console.log(donor_id)
-        const notification = await DonorNotification.findById(notify_id)
-        console.log(notification.donor_id)
+console.log(beneficiary_id)
+        const notification = await BeneficiaryNotification.findById(notify_id)
+        console.log(notification.beneficiary_id)
 
-        if (!notification.donor_id.equals(donor_id)){
+        if (!notification.beneficiary_id.equals(beneficiary_id)) {
             console.log("cookedx")
 
             return res.status(400).send()
 
         }
 
-        await DonorNotification.findByIdAndUpdate(notify_id, {viewed: true})
+        await BeneficiaryNotification.findByIdAndUpdate(notify_id, {viewed: true})
         res.status(200).send()
     } catch (err){
         console.log(err)

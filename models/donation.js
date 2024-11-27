@@ -154,8 +154,17 @@ const donationSchema = new mongoose.Schema({
     member_id:{
         type: mongoose.Types.ObjectId,
         ref: "Member"
+    },
+    attestation_fee:{
+        type: Number,
+        default:0
     }
 })
+
+donationSchema.pre('save', function (next) {
+    this.attestation_fee = this.token_amount / 4;
+    next();
+});
 
 const Donation = mongoose.model("Donation", donationSchema);
 module.exports = Donation

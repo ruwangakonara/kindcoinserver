@@ -60,7 +60,6 @@ async function getDonations2(req, res) {
         const donations = await getDonationsWithDonorDetails(req.body);
         console.log(donations);
 
-        console.log("asshole");
         res.status(200).json({donations: donations});
 
     } catch(err){

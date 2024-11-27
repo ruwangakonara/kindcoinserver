@@ -6,6 +6,7 @@ const Admin = require("../../models/admin");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Member = require("../../models/member");
+const emails = require("../../Middleware/Home/transporter")
 
 async function signup(req, res) {
   console.log(req.body);
@@ -44,9 +45,16 @@ async function signup(req, res) {
             const donor = await Donor.create({user_id, name, username, district, type, date_of_birth, phoneNo})
         console.log("Yo")
 
-        // }
+    const token = jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '1d' });
 
-        res.sendStatus(200)
+    // Send verification email
+    const verificationLink = `http://localhost:3000/verify/${token}`;
+
+       const info = emails.sendVerificationEmail(username,  verificationLink, donor, "Donor")
+
+        // }
+    res.status(200).json({type: "donor", donor});
+
     } catch (err){
         console.log(err)
         res.sendStatus(400);
@@ -59,6 +67,57 @@ async function signup(req, res) {
   //   console.log(err);
   // }
 }
+
+async function verify(req, res){
+
+  console.log(req.body);
+
+  const { token } = req.body;
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) return res.status(400).json({ message: 'Invalid token.' });
+
+    var details
+
+    if(user.status === "donor") {
+
+      details = await Donor.findOne({user_id: user._id});
+
+    } else
+      // if(user.status === "beneficiary")
+      {
+
+      details = await Beneficiary.findOne({user_id: user._id});
+
+    }
+
+    if (details.email_verified) return res.status(400).json({ message: 'Username already verified.' });
+
+    if(user.status === "donor") {
+
+      details = await Donor.findByIdAndUpdate(details._id, {email_verified: true}, {new: true});
+
+    } else
+        // if(user.status === "beneficiary")
+    {
+
+      details = await Beneficiary.findByIdAndUpdate(details._id, {email_verified: true}, {new: true});
+
+    }
+    // Mark user as verified
+    // user.isVerified = true;
+    // await user.save();
+
+    res.status(200).json({ message: 'Email verified successfully!', details, status: user.status });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ message: 'Invalid or expired token.' });
+  }
+};
 
 async function beneficiary_registration(req, res) {
   try {
@@ -93,6 +152,12 @@ async function beneficiary_registration(req, res) {
       date_of_birth,
     });
 
+    const token = jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '1d' });
+
+    // Send verification email
+    const verificationLink = `http://localhost:3000/verify/${token}`;
+
+    const info = emails.sendVerificationEmail(username,  verificationLink, beneficiary, "Beneficiary")
     // } else {
     //     const {} = req.body
 
@@ -101,7 +166,7 @@ async function beneficiary_registration(req, res) {
     // }
     // }
     console.log("Succesfully registered");
-    res.sendStatus(200);
+    res.status(200).json({type: "beneficiary", beneficiary});
   } catch (err) {
     res.sendStatus(400);
   }
@@ -267,5 +332,6 @@ module.exports = {
   checkAuth,
   Beneficiary,
   Donor,
-  Member
+  Member,
+  verify
 };

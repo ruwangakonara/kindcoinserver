@@ -47,7 +47,6 @@ async function createDonation(req, res) {
             const donor_id = new mongoose.Types.ObjectId(req.body.donor_id)
             const request_id = new mongoose.Types.ObjectId(req.body.request_id)
             const beneficiary_id = new mongoose.Types.ObjectId(req.body.beneficiary_id)
-            const donation = await Donation.create({user_id, donor_id, title, description, goods, request_id, beneficiary_id, type});
 
             //notify
 
@@ -59,8 +58,14 @@ async function createDonation(req, res) {
                 donation_id: donation._id,
             }
             await BeneficiaryNotification.create(notification)
-
             //
+
+
+            const donation = await Donation.create({user_id, donor_id, title, description, goods, request_id, beneficiary_id, type});
+
+
+
+
 
             res.status(201).json({donation: donation});
 

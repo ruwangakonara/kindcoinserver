@@ -12,6 +12,7 @@ router.get("/check-auth",requireAuth, UserController.checkAuth)
 router.post("/beneficiary_registration", UserController.beneficiary_registration)
 router.post("/textrazor", RazorController.textrazor)
 router.get("/get-donors", LeaderboardController.getDonors)
+router.post("/verify", UserController.verify)
 router.post("/get-donor", LeaderboardController.getDonor)
 router.post("/get-comments", LeaderboardController.getComments)
 
