@@ -5,11 +5,15 @@ const router = express.Router();
 const accountController = require("../Controllers/Donor/accountController");
 const uploader = require("../middleware/Donor/uploader");
 const uploader_donation = require("../middleware/Donor/uploader_donation");
+const uploader_leaderboard = require("../middleware/Donor/leaderboard");
 const announcementController = require("../Controllers/Donor/annoucementController");
 const requestController = require("../Controllers/Donor/requestController");
 const donationController = require("../Controllers/Donor/DonationController");
 const ticketController = require('../Controllers/Donor/ticketController');
 const userController = require("../Controllers/Donor/userController");
+const homeController = require("../Controllers/Donor/HomeController.jsx");
+const LeaderboardController = require("../Controllers/Donor/leadeboardController");
+const NotificationController = require("../Controllers/Donor/notificationController");
 
 
 router.post("/maintenance_done", requireDonorAuth, maintenanceController.maintenance_done);
@@ -35,6 +39,14 @@ router.put("/update_donation_image", requireDonorAuth,uploader_donation.fields([
     { name: 'image4', maxCount: 1 }
 ]), donationController.updateImages);
 
+router.put("/update_leaderboard_image", requireDonorAuth,uploader_leaderboard.fields([
+    { name: 'image1', maxCount: 1 },
+    { name: 'image2', maxCount: 1 },
+    { name: 'image3', maxCount: 1 },
+    { name: 'image4', maxCount: 1 },
+    { name: 'image5', maxCount: 1 }
+]), LeaderboardController.updateImages);
+
 router.get("/get_tickets", requireDonorAuth, ticketController.getTickets)
 router.post("/raise_ticket", requireDonorAuth, ticketController.raiseTicket)
 router.put("/update_ticket", requireDonorAuth, ticketController.updateTicket)
@@ -44,5 +56,18 @@ router.get("/get_donors", requireDonorAuth, userController.getDonors)
 router.get("/get_beneficiaries", requireDonorAuth, userController.getBeneficiaries)
 router.post("/get_donor", requireDonorAuth, userController.getDonor)
 router.post("/get_beneficiary", requireDonorAuth, userController.getBeneficiary)
+
+router.get("/get_donor_cards", requireDonorAuth, homeController.DonorCards)
+router.get("/get_home_requests", requireDonorAuth, homeController.homeRequests)
+
+router.get("/get_home_donors", requireDonorAuth, homeController.getDonors)
+router.get("/get_notifications", requireDonorAuth, NotificationController.getNotifications)
+router.get("/get_notifications_sidebar", requireDonorAuth, NotificationController.getNotificationV)
+router.post("/mark_as_viewed", requireDonorAuth, NotificationController.markAsViewed)
+
+router.get("/get_leader_donors", requireDonorAuth, LeaderboardController.getDonors)
+router.post("/get_leader_donor",requireDonorAuth, LeaderboardController.getDonor)
+router.post("/get_comments", requireDonorAuth, LeaderboardController.getComments)
+
 
 module.exports = router;

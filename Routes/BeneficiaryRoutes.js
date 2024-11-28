@@ -11,6 +11,9 @@ const ticketController = require('../Controllers/Beneficiary/ticketController');
 const userController = require("../Controllers/Beneficiary/userController");
 const otherRequestController = require("../Controllers/Beneficiary/otherRequestController");
 const donationController = require("../Controllers/Beneficiary/donationController");
+const homeController = require("../Controllers/Beneficiary/HomeController.jsx");
+const LeaderboardController = require("../Controllers/Beneficiary/leaderboardController");
+const NotificationController = require("../Controllers/Beneficiary/NotificationController");
 
 // router.put("/update_account", requireBeneficiaryAuth, uploader.single("profileImage"), accountController.updateBeneficiary);
 router.get("/get_account", requireBeneficiaryAuth, accountController.get_account);
@@ -38,6 +41,9 @@ router.put("/update_request", requireBeneficiaryAuth,
             { name: 'certificate_image', maxCount: 1 }
     ]),requestController.updateRequest)
 
+router.post("/close_request", requireBeneficiaryAuth, requestController.closeRequest)
+
+
 router.post("/get_requests", requireBeneficiaryAuth, otherRequestController.getRequests)
 router.post("/getrequest", requireBeneficiaryAuth, otherRequestController.getRequestyo)
 
@@ -52,9 +58,21 @@ router.post("/get_donor", requireBeneficiaryAuth, userController.getDonor)
 router.post("/get_beneficiary", requireBeneficiaryAuth, userController.getBeneficiary)
 
 router.post("/get_donations", requireBeneficiaryAuth, donationController.getDonations2)
-router.post("/get_donation", requireBeneficiaryAuth, donationController.getDonationyo)
+router.post("/get_donation", requireBeneficiaryAuth, donationController.getDonation)
 router.post("/accept_donation", requireBeneficiaryAuth, donationController.acceptDonation)
 
+router.get("/get_notifications", requireBeneficiaryAuth, NotificationController.getNotifications)
+router.get("/get_notifications_sidebar", requireBeneficiaryAuth, NotificationController.getNotificationV)
+router.post("/mark_as_viewed", requireBeneficiaryAuth, NotificationController.markAsViewed)
 
+router.get("/get_beneficiary_cards", requireBeneficiaryAuth, homeController.BeneficiaryCards)
+router.post("/get_home_donations", requireBeneficiaryAuth, homeController.getDonations)
+router.get("/get_home_donors", requireBeneficiaryAuth, homeController.getDonors)
+router.get("/get_leader_donors", requireBeneficiaryAuth, LeaderboardController.getDonors)
+router.post("/get_leader_donor",requireBeneficiaryAuth, LeaderboardController.getDonor)
+router.post("/get_comments", requireBeneficiaryAuth, LeaderboardController.getComments)
+router.post("/put_comment", requireBeneficiaryAuth, LeaderboardController.putComment)
+router.put("/update_comment", requireBeneficiaryAuth, LeaderboardController.updateComment)
+router.put("/delete_comment", requireBeneficiaryAuth, LeaderboardController.deleteComment)
 
 module.exports = router;

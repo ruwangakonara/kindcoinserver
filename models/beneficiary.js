@@ -8,6 +8,11 @@ const beneficairySchema = new Schema({
         required: true
     },
 
+    email_verified:{
+        type:Boolean,
+        default: false
+    },
+
     name: {
         type: String,
         required: true
@@ -16,6 +21,10 @@ const beneficairySchema = new Schema({
         type: String,
         required: true,
         unique: true
+    },
+    email:{
+        type: String,
+        default:""
     },
     address: {
         type: String,
@@ -40,7 +49,7 @@ const beneficairySchema = new Schema({
 
     profile_image: {
         type: String,
-        default: 'https://via.placeholder.com/300'
+        default: 'https://via.placeholder.com/150'
     },
     certificate_image: {
         type: String,

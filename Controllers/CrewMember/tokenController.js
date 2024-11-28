@@ -4,28 +4,32 @@ const Donor = require("../../models/donor")
 const Donation = require("../../models/donation")
 
 const {Server, Networks, Asset, BASE_FEE, TransactionBuilder, Operation, Keypair} = require("@stellar/stellar-sdk")
+const res = require("express/lib/response");
 
 const server = new Server('https://horizon-testnet.stellar.org');
 server.useNetwork(Networks.TESTNET)
 
 
-const tokenCode = "KND"
-const issuerPublicKey = "adasfdscc"
-const distributionsecretKey = "ajnajnc"
+const tokenCode = process.env["TOKEN_CODE"]
+const issuerPublicKey = process.env["ISSUER_PUBLIC_KEY"]
+const distributionsecretKey = process.env["DISTRIBUTOR_SECRET_KEY"]
 
 
-async function getXlmToLkrRate() {
+async function getXlmToLkrRate(req, res) {
     try {
+        console.log("Benny");
         const response = await axios.get('https://api.coingecko.com/api/v3/simple/price?ids=stellar&vs_currencies=lkr');
         const xlmToLkrRate = response.data.stellar.lkr;
-        return xlmToLkrRate;
+        // return xlmToLkrRate;
+        console.log(xlmToLkrRate);
+        res.status(200).send(xlmToLkrRate);
     } catch (error) {
         console.error('Error fetching XLM to LKR rate:', error);
         throw error;
     }
 }
 
-async function getTokenToXlmRate() {
+async function getTokenToXlmRate(req, res) {
     try {
         // Create an asset object for your token
         const tokenAsset = new Asset(tokenCode, issuerPublicKey);
@@ -36,7 +40,9 @@ async function getTokenToXlmRate() {
         // Get the price of the highest bid for the token in the orderbook
         const tokenToXlmRate = orderbook.bids[0].price;
 
-        return tokenToXlmRate;
+        // return tokenToXlmRate;
+        console.log(tokenToXlmRate);
+        res.status(200).send(tokenToXlmRate);
     } catch (error) {
         console.error('Error fetching token to XLM rate:', error);
         throw error;
@@ -60,7 +66,7 @@ async function transfer(req, res) {
         }
 
         // Determine the amount to transfer in LKR
-        const LKRamount = donation.amount;
+        const LKRamount = donation.value;
 
         // Get the current exchange rates
         const xlmToLkrRate = await getXlmToLkrRate();
@@ -77,7 +83,7 @@ async function transfer(req, res) {
             networkPassphrase: Networks.TESTNET,
         })
             .addOperation(Operation.payment({
-                destination: receiverAddress, // Receiver's Stellar address
+                destination: donorAddress, // Receiver's Stellar address
                 asset: new Asset(tokenCode, issuerPublicKey), // Your custom token
                 amount: tokenAmount.toString(), // Amount of tokens to send
             }))

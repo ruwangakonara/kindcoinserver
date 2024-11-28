@@ -29,6 +29,8 @@ async function getRequestsWithBeneficiaryDetails(filterCriteria) {
                     beneficiary_id: '$beneficiaryDetails._id',
                     name: '$beneficiaryDetails.name',
                     profile_image: '$beneficiaryDetails.profile_image',
+                    description: '$beneficiaryDetails.description',
+                    type: '$beneficiaryDetails.type',
                     // beneficiaryAddress: '$beneficiaryDetails.address'
                 }
             }
@@ -49,7 +51,7 @@ async function getRequests(req, res) {
 
     try{
         const requests = await getRequestsWithBeneficiaryDetails(req.body);
-        console.log(requests);
+        // console.log(requests);
 
         res.status(200).json({requests: requests});
 
