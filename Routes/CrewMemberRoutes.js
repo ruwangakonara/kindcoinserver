@@ -34,4 +34,3 @@ router.get("/get_request", requestController.getAllRequests)//Todo: Configure cr
 router.put("/update_request_status", requestController.updateRequestStatus)//Todo: Configure crew member auth
 
 module.exports = router;
-

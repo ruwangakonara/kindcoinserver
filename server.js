@@ -115,7 +115,7 @@ app.use("/member", memberRoutes);
 app.use("/crew", crewRoutes);
 app.use("/admin", adminRoutes);
 
-app.use("/crew", crewRoutes);
+// app.use("/crew", crewRoutes);
 
 app.use("/admin", adminRoutes);
 
