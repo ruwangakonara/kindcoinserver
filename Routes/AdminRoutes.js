@@ -15,11 +15,11 @@ const AdminReqController = require("../Controllers/Admin/AdminReqController");
 /**
  * #####################################################################################
  * beneficiaries routes - getAll, getone, update, deactivate, remove
- * #####################################################################################
+ * ###########################################################  ##########################
  */
 router.get(
   "/Beneficiary_List/Beneficiaries",
-  requireAdminAuth,
+  // requireAdminAuth,
   AdminBeneficiaryController.getAllBeneficiaries
 );
 router.get(
@@ -46,15 +46,15 @@ router.delete(
  */
 router.get(
   "/Donor_List/Donors",
-  requireAdminAuth,
+  // requireAdminAuth,
   AdminDonorController.getAllDonors
 );
 router.get(
   "/Donor_List/Donors/:id",
-  requireAdminAuth,
+  // requireAdminAuth,
   AdminDonorController.getDonor
 );
-router.put("/Donor_List/Donors/:id/edit", AdminDonorController.updateDonor);
+router.put("/Donor_List/Donors/edit/:id", AdminDonorController.updateDonor);
 router.put(
   "/Donor_List/Donors/deactivate/:id",
   AdminDonorController.deactivateDonor
