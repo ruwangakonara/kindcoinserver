@@ -333,5 +333,6 @@ module.exports = {
   Beneficiary,
   Donor,
   Member,
-  verify
+  verify,
+  User
 };

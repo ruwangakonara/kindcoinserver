@@ -15,8 +15,9 @@ const requestController = require("../Controllers/CrewMember/RequestController")
 
 
 router.post("/transfer", TokenController.transfer)
-router.get("/xlm_to_lkr", TokenController.getXlmToLkrRate)
-router.get("/knd_to_xlm", TokenController.getTokenToXlmRate)
+router.post("/get_transaction", TokenController.getTransactionDetails)
+// router.get("/xlm_to_lkr", TokenController.getXlmToLkrRate)
+// router.get("/knd_to_xlm", TokenController.getTokenToXlmRate)
 router.post("/dispatch", TokenController.dispatchTokens)
 router.post("/verify_goods_donation", DonationController.verifyGoodsDonation)
 router.post("/verify_monetary_donation", DonationController.verifyMonetaryDonation)

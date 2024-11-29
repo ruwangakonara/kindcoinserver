@@ -11,7 +11,7 @@ async function updateDonor(req, res) {
     try {
         const  filename  = req.file ? req.file.filename : undefined;
         console.log(filename)
-        const {user_id, donor_id, address, usual_donations, name, description, anonymous, stellar_address } = req.body;
+        const {user_id, donor_id, address, usual_donations, name, description, anonymous, leaderboard_anonymous, stellar_address } = req.body;
 
         const donor = await Donor.findById(req.body.donor_id);
 
@@ -30,7 +30,8 @@ async function updateDonor(req, res) {
             usual_donations,
             name,
             anonymous,
-            stellar_address
+            stellar_address,
+            leaderboard_anonymous
         };
 
         if (filename){
