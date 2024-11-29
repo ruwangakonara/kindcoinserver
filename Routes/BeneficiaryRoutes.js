@@ -13,6 +13,7 @@ const otherRequestController = require("../Controllers/Beneficiary/otherRequestC
 const donationController = require("../Controllers/Beneficiary/donationController");
 const homeController = require("../Controllers/Beneficiary/HomeController.jsx");
 const LeaderboardController = require("../Controllers/Beneficiary/leaderboardController");
+const NotificationController = require("../Controllers/Beneficiary/NotificationController");
 
 // router.put("/update_account", requireBeneficiaryAuth, uploader.single("profileImage"), accountController.updateBeneficiary);
 router.get("/get_account", requireBeneficiaryAuth, accountController.get_account);
@@ -59,6 +60,10 @@ router.post("/get_beneficiary", requireBeneficiaryAuth, userController.getBenefi
 router.post("/get_donations", requireBeneficiaryAuth, donationController.getDonations2)
 router.post("/get_donation", requireBeneficiaryAuth, donationController.getDonation)
 router.post("/accept_donation", requireBeneficiaryAuth, donationController.acceptDonation)
+
+router.get("/get_notifications", requireBeneficiaryAuth, NotificationController.getNotifications)
+router.get("/get_notifications_sidebar", requireBeneficiaryAuth, NotificationController.getNotificationV)
+router.post("/mark_as_viewed", requireBeneficiaryAuth, NotificationController.markAsViewed)
 
 router.get("/get_beneficiary_cards", requireBeneficiaryAuth, homeController.BeneficiaryCards)
 router.post("/get_home_donations", requireBeneficiaryAuth, homeController.getDonations)

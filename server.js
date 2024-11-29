@@ -15,7 +15,7 @@ const NoteController = require("./controllers/NoteController");
 const homeRoutes = require("./routes/HomeRoutes");
 const donorRoutes = require("./routes/DonorRoutes");
 const beneficiaryRoutes = require("./routes/BeneficiaryRoutes");
-const memberRoutes = require("./routes/CrewMemberRoutes");
+const memberRoutes = require("./Routes/CrewMemberRoutes");
 const uploader = require("./middleware/donor/uploader"); // Adjust the path based on your folder structure
 // const adminRoutes = require("./Routes/AdminRoutes");
 const crewRoutes = require("./Routes/CrewMemberRoutes");
@@ -126,7 +126,7 @@ app.use("/member", memberRoutes);
 app.use("/crew", crewRoutes);
 app.use("/admin", adminRoutes);
 
-app.use("/crew", crewRoutes);
+// app.use("/crew", crewRoutes);
 
 app.use("/admin", adminRoutes);
 

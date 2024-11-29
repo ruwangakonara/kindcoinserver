@@ -8,6 +8,11 @@ const beneficairySchema = new Schema({
         required: true
     },
 
+    email_verified:{
+        type:Boolean,
+        default: false
+    },
+
     name: {
         type: String,
         required: true

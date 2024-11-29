@@ -9,6 +9,10 @@ const donorSchema = new Schema({
         ref: 'User',
         required: true
     },
+    email_verified:{
+        type:Boolean,
+        default: false
+    },
 
     name: {
         type: String,
@@ -78,6 +82,11 @@ const donorSchema = new Schema({
     anonymous:{
     type:Boolean,
         default:true
+    },
+
+    leaderboard_anonymous:{
+        type:Boolean,
+        default: false
     },
 
     anonymous_id:{

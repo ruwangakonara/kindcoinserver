@@ -5,6 +5,7 @@ const Donation = donation.Donation;
 const Request = request.Request
 const user = require("../Home/UserController");
 const Donor = user.Donor
+const Beneficiary = user.Beneficiary
 async function BeneficiaryCards(req, res) {
 
     const user_id = new mongoose.Types.ObjectId(req.sub);
@@ -17,14 +18,20 @@ async function BeneficiaryCards(req, res) {
 
     const c_closed = closedreq?.length
 
+    const beneficiary = await Beneficiary.findOne({user_id})
+
+    const donations = await Donation.find({beneficiary_id: beneficiary._id, verified: true})
+
+    const c_donations = donations?.length
     // const verified = await Donation.find({user_id, verified: true})
     const amount = closedreq.reduce((sum, closedreqs) => sum + closedreqs.raised, 0);
+    const amount2 = openreq.reduce((sum, openreqs) => sum + openreqs.raised, 0);
 
     // var tokens = completed.reduce((sum, donation) => sum + donation.token_amount, 0);
     //
     // if (!tokens) tokens = 0
 
-    res.status(200).json({c_open, c_closed, amount})
+    res.status(200).json({c_open, c_closed, amount: amount + amount2, c_donations})
 
 }
 

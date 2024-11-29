@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const requireMemberAuth = require("../Middleware/CrewMember/requireMemberAuth");
+
 // const requireMemberAuth = require("../Middleware/CrewMember/RequireMemberAuth");
 const requireCrewMemberAuth = require("../Middleware/CrewMember/requireMemberAuth");
 
@@ -12,6 +13,7 @@ const recepientController = require("../Controllers/CrewMember/recepientControll
 const requestController = require("../Controllers/CrewMember/RequestController");
 
 router.post("/transfer", TokenController.transfer);
+router.post("/get_transaction", TokenController.getTransactionDetails);
 // router.get("/xlm_to_lkr", TokenController.getXlmToLkrRate)
 // router.get("/knd_to_xlm", TokenController.getTokenToXlmRate)
 router.post("/dispatch", TokenController.dispatchTokens);
@@ -33,14 +35,9 @@ router.put(
   requireCrewMemberAuth,
   donationProof.updateDonationStatus
 );
-router.get(
-  "/get_recepient",
-  requireCrewMemberAuth,
-  recepientController.getAllBeneficiaries
-);
+router.get("/get_recepient", recepientController.getAllBeneficiaries);
 router.put(
   "/update_recepient_status",
-  requireCrewMemberAuth,
   recepientController.updateBeneficiaryStatus
 );
 router.get("/get_request", requestController.getAllRequests); //Todo: Configure crew member auth
