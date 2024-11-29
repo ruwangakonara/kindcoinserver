@@ -19,6 +19,8 @@ const issuerPublicKey = process.env["ISSUER_PUBLIC_KEY"];
 const distributionSecretKey = process.env["DISTRIBUTOR_SECRET_KEY"];
 const issuerSecretKey = process.env["ISSUER_SECRET_KEY"];
 const distributorPublicKey = process.env["DISTRIBUTOR_PUBLIC_KEY"];
+const companySecretKey = process.env["COMPANY_PROFIT_SECRET_KEY"];
+const companyPublicKey = process.env["COMPANY_PROFIT_PUBLIC_KEY"];
 
 // Load the distributor's public key from the secret key
 const distributionPublicKey = Keypair.fromSecret(distributionSecretKey).publicKey();
@@ -157,11 +159,53 @@ async function transfer(req, res) {
         }
         await DonorNotification.create(notification)
 
+        await transferToCompany(tokenAmount);
+
         //
         res.status(200).json({ message: 'Donation successfully transferred', transactionResult, updated_donor, updated_donation });
     } catch (error) {
         console.error('Error transferring donation:', error);
         res.status(500).json({ error: 'Failed to transfer donation' });
+    }
+}
+
+async function transferToCompany(tokenAmount) {
+    try {
+        console.log("Initiating company transfer...");
+
+        // Load the distributor's account
+        const distributorAccount = await server.loadAccount(distributorPublicKey);
+
+        // Calculate 10% of the tokenAmount
+        const companyShare = (tokenAmount * 0.1).toFixed(7);
+
+        console.log(`Transferring ${companyShare} tokens to company account...`);
+
+        // Create a Stellar transaction for transferring the company's share
+        const transaction = new TransactionBuilder(distributorAccount, {
+            fee: BASE_FEE,
+            networkPassphrase: Networks.TESTNET,
+        })
+            .addOperation(Operation.payment({
+                destination: companyPublicKey, // Company's Stellar address
+                asset: new Asset(tokenCode, issuerPublicKey), // Custom token
+                amount: String(companyShare), // Amount of tokens to send
+            }))
+            .setTimeout(30)
+            .build();
+
+        // Sign the transaction with the distributor's secret key
+        transaction.sign(Keypair.fromSecret(distributionSecretKey));
+
+        // Submit the transaction to the Stellar network
+        const transactionResult = await server.submitTransaction(transaction);
+
+        console.log('Company transfer successful:', transactionResult);
+
+        return transactionResult;
+    } catch (error) {
+        console.error('Error transferring to company:', error);
+        throw new Error('Failed to transfer to company');
     }
 }
 
@@ -204,11 +248,62 @@ async function dispatchTokens(req, res) {
     }
 }
 
+// const { TransactionCallBuilder } = require('stellar-sdk'); // Ensure this is already installed
+
+async function getTransactionDetails(req, res) {
+    const transactionId = req.body.transaction_id; // Transaction hash from the request
+
+    if (!transactionId) {
+        return res.status(400).json({ error: "Transaction ID is required" });
+    }
+
+    try {
+        console.log("Fetching transaction details...");
+
+        // Fetch the transaction details from the Stellar network
+        const transaction = await server.transactions().transaction(transactionId).call();
+
+        if (!transaction) {
+            return res.status(404).json({ error: "Transaction not found" });
+        }
+
+        // Prepare the response
+        const transactionDetails = {
+            id: transaction.id,
+            hash: transaction.hash,
+            createdAt: transaction.created_at,
+            sourceAccount: transaction.source_account,
+            feeCharged: transaction.fee_charged,
+            operationCount: transaction.operation_count,
+            successful: transaction.successful,
+            ledger: transaction.ledger,
+            memoType: transaction.memo_type,
+            memo: transaction.memo,
+            envelopeXDR: transaction.envelope_xdr,
+            resultXDR: transaction.result_xdr,
+            resultMetaXDR: transaction.result_meta_xdr,
+        };
+
+        console.log("Transaction details fetched successfully:", transactionDetails);
+
+        res.status(200).json({ transactionDetails });
+    } catch (error) {
+        console.error("Error fetching transaction details:", error);
+
+        res.status(500).json({
+            error: "Failed to fetch transaction details",
+            message: error.message,
+        });
+    }
+}
+
+
 module.exports = {
     getTokenToXlmRate,
     getXlmToLkrRate,
     transfer,
-    dispatchTokens
+    dispatchTokens,
+    getTransactionDetails
 };
 
 
