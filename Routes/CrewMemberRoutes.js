@@ -26,7 +26,7 @@ router.post("/verify_donation_doc", DonationController.verifyDonationDoc)
 
 
 
-router.get("/get_donation_proof", requireCrewMemberAuth, donationProof.getAllDonations)
+router.get("/get_donation_proof", donationProof.getAllDonations)
 router.put("/update_donation_status", requireCrewMemberAuth, donationProof.updateDonationStatus)
 router.get("/get_recepient",  recepientController.getAllBeneficiaries)
 router.put("/update_recepient_status", recepientController.updateBeneficiaryStatus)
