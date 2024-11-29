@@ -62,7 +62,7 @@ async function getTokenToXlmRate() {
 }
 
 
-
+//endpoint
 async function transfer(req, res) {
     // const user_id = new mongoose.Types.ObjectId(req.body.donor_user_id);
     console.log("arrived!!")
@@ -165,7 +165,7 @@ async function transfer(req, res) {
     }
 }
 
-
+//endpoint
 async function dispatchTokens(req, res) {
     try {
         // Create a new asset for your token
