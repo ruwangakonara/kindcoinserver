@@ -84,6 +84,11 @@ const donorSchema = new Schema({
         default:true
     },
 
+    leaderboard_anonymous:{
+        type:Boolean,
+        default: false
+    },
+
     anonymous_id:{
         type: Number,
         // required: true
