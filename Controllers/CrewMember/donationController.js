@@ -126,7 +126,7 @@ async function verifyDonationDoc(req, res) {
 
         const donation_id = new mongoose.Types.ObjectId(req.body.donation_id)
         const donation = await Donation.findByIdAndUpdate(donation_id, {doc_verified: true}, {new: true})
-        const request = await Request.findByID(donation.request_id);
+        const request = await Request.findById(donation.request_id);
         const beneficiary = await Beneficiary.findById(request.beneficiary_id);
 
 
@@ -140,6 +140,7 @@ async function verifyDonationDoc(req, res) {
         await DonorNotification.create(notification)
 
 
+        res.status(200).send()
         // const donor_id = Donation.donor_id
         // const donor = await Donor.findByIdAndUpdate(donor_id, { $inc: { donated: donation?.value } }, {new: true})
 
@@ -153,8 +154,90 @@ async function verifyDonationDoc(req, res) {
 
 }
 
+async function getDonationsWithDonorBeneficiaryRequestDetails(filterCriteria) {
+    try {
+        console.log(filterCriteria);
+        const results = await Donation.aggregate([
+            {
+                $match: filterCriteria // Apply filter criteria
+            },
+            {
+                $lookup: {
+                    from: 'donors', // Use the exact collection name here
+                    localField: 'donor_id',
+                    foreignField: '_id',
+                    as: 'donorDetails' // The field to be populated
+                }
+            },
+            {
+                $unwind: '$donorDetails' // Unwind the correct field
+            },
+            {
+                $lookup: {
+                    from: 'beneficiaries', // Use the exact collection name here
+                    localField: 'beneficiary_id',
+                    foreignField: '_id',
+                    as: 'beneficiaryDetails' // The field to be populated
+                }
+            },
+            {
+                $unwind: '$beneficiaryDetails' // Unwind the correct field
+            },
+
+            {
+                $lookup: {
+                    from: 'requests', // Use the exact collection name here
+                    localField: 'request_id',
+                    foreignField: '_id',
+                    as: 'requestDetails' // The field to be populated
+                }
+            },
+            {
+                $unwind: '$requestDetails' // Unwind the correct field
+            },
+            {
+                $project: {
+                    donationDetails: '$$ROOT',
+                    requestDetails: '$requestDetails',
+                    donorDetails: '$donorDetails',
+                    beneficiaryDetails: '$beneficiaryDetails',
+                    // beneficiaryAddress: '$beneficiaryDetails.address'
+                }
+            }
+        ]);
+
+
+        return results;
+
+    } catch (error) {
+        console.error('Error retrieving donations with donor details:', error);
+    }
+}
+
+
+async function getDonations2(req, res) {
+
+    try{
+
+        // req.body.request_id  =  new mongoose.Types.ObjectId(req.body.request_id);
+
+        const donations = await getDonationsWithDonorBeneficiaryRequestDetails(req.body);
+        console.log(donations);
+
+        res.status(200).json({donations: donations});
+
+    } catch(err){
+
+        res.status(400).json({error: err.message});
+
+    }
+
+}
+
+
 module.exports = {
     verifyMonetaryDonation,
     verifyGoodsDonation,
-    verifyDonationDoc
+    verifyDonationDoc,
+    getDonations2
 }
