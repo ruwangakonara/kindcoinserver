@@ -31,7 +31,7 @@ router.post("/verify_donation_doc", DonationController.verifyDonationDoc);
 //IMPORTANT: Add requireMemberAuth middleware to the routes below
 
 router.get("/get_donation_proof", donationProof.getAllDonations)
-router.put("/update_donation_status", requireCrewMemberAuth, donationProof.updateDonationStatus)
+router.put("/update_donation_status", donationProof.updateDonationStatus)
 router.get("/get_recepient",  recepientController.getAllBeneficiaries)
 router.put("/update_recepient_status", recepientController.updateBeneficiaryStatus)
 router.get("/get_request", requestController.getAllRequests)//Todo: Configure crew member auth

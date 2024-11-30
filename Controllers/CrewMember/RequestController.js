@@ -22,20 +22,45 @@ async function getAllRequests(req, res) {
 }
 
 
-// Update request status
 async function updateRequestStatus(req, res) {
     try {
         const { requestId, status } = req.body;
-        // console.log("Request body", req.body);
-        if (!['Pending', 'Published', 'Rejected'].includes(status)) {
-            return res.status(400).json({ error: 'Invalid status value' });
-            console.log("Invalid status value");
+        
+        // Validate status
+        const validStatuses = ['Pending', 'Published', 'Rejected'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({ 
+                error: 'Invalid status value', 
+                validStatuses 
+            });
         }
-        const updatedRequest = await Request.findByIdAndUpdate(requestId, { status }, { new: true });
-        res.status(200).json({ request: updatedRequest });
-        console.log("Successfully updated request status", updatedRequest);
+
+        // Find and update the request
+        const updatedRequest = await Request.findByIdAndUpdate(
+            requestId, 
+            { status }, 
+            { 
+                new: true,  // Return the updated document
+                runValidators: true  // Run model validations
+            }
+        );
+
+        // Check if request was found
+        if (!updatedRequest) {
+            return res.status(404).json({ error: 'Request not found' });
+        }
+
+        // Successful response
+        res.status(200).json({ 
+            message: 'Request status updated successfully',
+            request: updatedRequest 
+        });
     } catch (err) {
-        res.status(400).json({ error: err.message });
+        console.error('Update status error:', err);
+        res.status(500).json({ 
+            error: 'Internal server error', 
+            details: err.message 
+        });
     }
 }
 
