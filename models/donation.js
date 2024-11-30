@@ -98,6 +98,7 @@ const donationSchema = new mongoose.Schema({
 
     doc_verified:{
         type:Boolean,
+        required:true,
         default: false
     },
 
