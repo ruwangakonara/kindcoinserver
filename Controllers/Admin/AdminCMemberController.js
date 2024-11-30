@@ -1,5 +1,7 @@
-const CrewMember = require("../../models/crew_member");
-const User = require("../../models/user");
+const CrewMember = require("../Home/UserController").Member;
+const User = require("../Home/UserController").User;
+const bcrypt = require("bcryptjs");
+
 
 // logic to register a crew member to the system and update his/her details and get all crew members, get a single crew member details, remove crew member from the system
 
@@ -11,33 +13,34 @@ async function crewMember_signup(req, res) {
     // status = "crewmember";
     const {
       name,
-      noOfOperations,
-      stellarid,
-      town,
-      profile_image,
-      certificate_image,
+      // noOfOperations,
+      // stellarid,
+      // town,
+      // profile_image,
+      // certificate_image,
       phoneNo,
-      username,
-      password,
+      userName,
+      passWord,
       status,
     } = req.body;
 
-    const hashedpass = bcrypt.hashSync(password, 8);
+    const hashedpass = bcrypt.hashSync(passWord, 8);
 
-    const user = await User.create({ username, password: hashedpass, status });
+    const user = await User.create({ username: userName, password: hashedpass, status });
 
     const user_id = user._id;
-    const created_at = Date.now();
+    // const created_at = Date.now();
     const crewMember = await CrewMember.create({
       user_id,
       name,
-      noOfOperations,
-      stellarid,
-      town,
-      profile_image,
-      certificate_image,
-      phoneNo,
-      created_at,
+      // noOfOperations,
+      // stellarid,
+      // town,
+      // profile_image,
+      // certificate_image,
+      phone: phoneNo,
+      // created_at,,
+      username: userName
     });
     console.log("Crew Member Succesfully registered");
     console.log(crewMember);
