@@ -111,8 +111,8 @@ app.delete("/notes/:id", NoteController.deleteNote);
 app.use("/", homeRoutes);
 app.use("/donor", donorRoutes);
 app.use("/beneficiary", beneficiaryRoutes);
-app.use("/member", memberRoutes);
-app.use("/crew", crewRoutes);
+// app.use("/member", memberRoutes);
+// app.use("/crew", crewRoutes);
 app.use("/admin", adminRoutes);
 
 app.use("/crew", crewRoutes);

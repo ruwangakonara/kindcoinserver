@@ -25,6 +25,38 @@ const companyPublicKey = process.env["COMPANY_PROFIT_PUBLIC_KEY"];
 // Load the distributor's public key from the secret key
 const distributionPublicKey = Keypair.fromSecret(distributionSecretKey).publicKey();
 
+async function getDistributorBalance(req, res) {
+    try {
+        // const distributorPublicKey = process.env["DISTRIBUTOR_PUBLIC_KEY"];
+
+        // Load the account details
+        const account = await server.loadAccount(distributorPublicKey);
+
+        // Find the balance for KINDCOIN
+        const kindcoinBalance = account.balances.find(balance => balance.asset_code === tokenCode);
+
+        if (kindcoinBalance) {
+            res.status(200).json({
+                success: true,
+                asset_code: tokenCode,
+                balance: kindcoinBalance.balance,
+                key:distributionPublicKey
+            });
+        } else {
+            res.status(404).json({
+                success: false,
+                message: 'KINDCOIN asset not found in distributor account'
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Error fetching distributor account details',
+            error: error.message
+        });
+    }
+}
+
 async function getXlmToLkrRate() {
     console.log("we here")
     try {
@@ -268,25 +300,84 @@ async function getTransactionDetails(req, res) {
         }
 
         // Prepare the response
-        const transactionDetails = {
-            id: transaction.id,
-            hash: transaction.hash,
-            createdAt: transaction.created_at,
-            sourceAccount: transaction.source_account,
-            feeCharged: transaction.fee_charged,
-            operationCount: transaction.operation_count,
-            successful: transaction.successful,
-            ledger: transaction.ledger,
-            memoType: transaction.memo_type,
-            memo: transaction.memo,
-            envelopeXDR: transaction.envelope_xdr,
-            resultXDR: transaction.result_xdr,
-            resultMetaXDR: transaction.result_meta_xdr,
-        };
+        // const transactionDetails = {
+        //     id: transaction.id,
+        //     hash: transaction.hash,
+        //     createdAt: transaction.created_at,
+        //     sourceAccount: transaction.source_account,
+        //     feeCharged: transaction.fee_charged,
+        //     operationCount: transaction.operation_count,
+        //     successful: transaction.successful,
+        //     ledger: transaction.ledger,
+        //     memoType: transaction.memo_type,
+        //     memo: transaction.memo,
+        //     envelopeXDR: transaction.envelope_xdr,
+        //     resultXDR: transaction.result_xdr,
+        //     resultMetaXDR: transaction.result_meta_xdr,
+        // };
 
-        console.log("Transaction details fetched successfully:", transactionDetails);
+        console.log("Transaction details fetched successfully:", transaction);
 
-        res.status(200).json({ transactionDetails });
+        res.status(200).json({ transaction });
+    } catch (error) {
+        console.error("Error fetching transaction details:", error);
+
+        res.status(500).json({
+            error: "Failed to fetch transaction details",
+            message: error.message,
+        });
+    }
+}
+
+async function getTransactionDetails2(req, res) {
+    const transactionId = req.body.transaction_id; // Transaction hash from the request
+
+    if (!transactionId) {
+        return res.status(400).json({ error: "Transaction ID is required" });
+    }
+
+    try {
+        console.log("Fetching transaction details...");
+
+        // Fetch the transaction details from the Stellar network
+        const transaction = await server.transactions().transaction(transactionId).call();
+
+        if (!transaction) {
+            return res.status(404).json({ error: "Transaction not found" });
+        }
+
+        // Fetch the operations for this transaction
+        const operations = await server.operations().forTransaction(transactionId).call();
+
+        // Extract the KINDCOIN payment operation (assuming it's a payment)
+        const paymentOperation = operations.records.find(
+            (op) => op.type === 'payment' || op.type === 'path_payment_strict_send' || op.type === 'path_payment_strict_receive'
+        );
+
+        if (!paymentOperation) {
+            return res.status(404).json({ error: "No payment operation found in this transaction" });
+        }
+
+        // Extract the amount and destination account
+        const amount = paymentOperation.amount; // KINDCOIN amount transferred
+        const destination = paymentOperation.to; // Destination account
+
+        console.log("Transaction details fetched successfully:", transaction);
+
+        // Respond with the extracted details
+        res.status(200).json({
+            transaction: {
+                id: transaction.id,
+                hash: transaction.hash,
+                createdAt: transaction.created_at,
+                sourceAccount: transaction.source_account,
+                destinationAccount: destination,
+                amountTransferred: amount,
+                memoType: transaction.memo_type,
+                memo: transaction.memo,
+                successful: transaction.successful,
+            },
+        });
     } catch (error) {
         console.error("Error fetching transaction details:", error);
 
@@ -298,12 +389,15 @@ async function getTransactionDetails(req, res) {
 }
 
 
+
 module.exports = {
     getTokenToXlmRate,
     getXlmToLkrRate,
     transfer,
     dispatchTokens,
-    getTransactionDetails
+    getTransactionDetails,
+    getDistributorBalance,
+    getTransactionDetails2
 };
 
 

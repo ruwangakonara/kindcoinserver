@@ -13,12 +13,15 @@ const recepientController = require("../Controllers/CrewMember/recepientControll
 const requestController = require("../Controllers/CrewMember/RequestController");
 
 
+router.post("/get_donations", requireCrewMemberAuth, DonationController.getDonations2)
+
 
 router.post("/transfer", TokenController.transfer)
-router.post("/get_transaction", TokenController.getTransactionDetails)
+router.post("/get_transaction", TokenController.getTransactionDetails2)
 // router.get("/xlm_to_lkr", TokenController.getXlmToLkrRate)
 // router.get("/knd_to_xlm", TokenController.getTokenToXlmRate)
 router.post("/dispatch", TokenController.dispatchTokens)
+router.get("/get_balance", TokenController.getDistributorBalance)
 router.post("/verify_goods_donation", DonationController.verifyGoodsDonation)
 router.post("/verify_monetary_donation", DonationController.verifyMonetaryDonation)
 
