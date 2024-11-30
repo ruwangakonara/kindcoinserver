@@ -22,6 +22,27 @@ async function create_announcements(req, res) {
   }
 }
 
+async function create_announcement_for_good_donations(req, res) {
+  try {
+    const dateNow = new Date(); // This will give you the current date and time as a Date object
+    // donor, beneficiary specifies whom to be shown in a boolean type.If both true it is a general announcement.
+    const { title, body, donor, beneficiary } = req.body;
+
+    const announcement = await Announcement.create({
+      title,
+      body,
+      donor,
+      beneficiary,
+      created: dateNow,
+    });
+    console.log("Announcement created successfully");
+    res.status(201).json({ announcement });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
 /** TESTED */
 async function update_announcement(req, res) {
   try {
@@ -129,4 +150,5 @@ module.exports = {
   get_beneficiary_announcements,
   get_donor_announcements,
   get_all_announcements,
+  create_announcement_for_good_donations,
 };
