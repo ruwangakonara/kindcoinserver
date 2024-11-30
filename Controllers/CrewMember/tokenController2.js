@@ -96,7 +96,7 @@ async function getTokenToXlmRate() {
 }
 
 
-
+//endpoint
 async function transfer(req, res) {
     // const user_id = new mongoose.Types.ObjectId(req.body.donor_user_id);
     console.log("arrived!!")

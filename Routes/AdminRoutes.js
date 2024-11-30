@@ -15,14 +15,15 @@ const AdminReqController = require("../Controllers/Admin/AdminReqController");
 /**
  * #####################################################################################
  * beneficiaries routes - getAll, getone, update, deactivate, remove
- * #####################################################################################
+ * ###########################################################  ##########################
  */
 router.get(
   "/Beneficiary_List/Beneficiaries",
+  // requireAdminAuth,
   AdminBeneficiaryController.getAllBeneficiaries
 );
 router.get(
-  "/Beneficiary_List/Beneficiaries/:id",
+  "/Beneficiary_List/Beneficiary/:id",
   AdminBeneficiaryController.getBeneficiary
 );
 router.put(
@@ -43,9 +44,17 @@ router.delete(
  * donors routes - getone, getAll, update, deactivate, remove
  * #####################################################################################
  */
-router.get("/Donor_List/Donors", AdminDonorController.getAllDonors);
-router.get("/Donor_List/Donors/:id", AdminDonorController.getDonor);
-router.put("/Donor_List/Donors/:id/edit", AdminDonorController.updateDonor);
+router.get(
+  "/Donor_List/Donors",
+  // requireAdminAuth,
+  AdminDonorController.getAllDonors
+);
+router.get(
+  "/Donor_List/Donors/:id",
+  // requireAdminAuth,
+  AdminDonorController.getDonor
+);
+router.put("/Donor_List/Donors/edit/:id", AdminDonorController.updateDonor);
 router.put(
   "/Donor_List/Donors/deactivate/:id",
   AdminDonorController.deactivateDonor
