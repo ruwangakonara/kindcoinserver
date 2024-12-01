@@ -3,7 +3,6 @@ const User = require("../Home/UserController").User;
 const bcrypt = require("bcryptjs");
 const Donor = require("../../models/donor");
 
-
 // logic to register a crew member to the system and update his/her details and get all crew members, get a single crew member details, remove crew member from the system
 
 // register/signup a crew member
@@ -27,7 +26,11 @@ async function crewMember_signup(req, res) {
 
     const hashedpass = bcrypt.hashSync(passWord, 8);
 
-    const user = await User.create({ username: userName, password: hashedpass, status });
+    const user = await User.create({
+      username: userName,
+      password: hashedpass,
+      status,
+    });
 
     const user_id = user._id;
     // const created_at = Date.now();
@@ -41,7 +44,7 @@ async function crewMember_signup(req, res) {
       // certificate_image,
       phone: phoneNo,
       // created_at,,
-      username: userName
+      username: userName,
     });
     console.log("Crew Member Succesfully registered");
     console.log(crewMember);
@@ -72,9 +75,10 @@ async function crewMember_update(req, res) {
   } catch (e) {}
 }
 
-// assign a crew member for a task
+// assign a crew member for a goods donation task
 async function crewMember_assignTask(req, res) {
   try {
+    // logic => get all goods donations. click assign . view members. choose a member.
   } catch (e) {}
 }
 

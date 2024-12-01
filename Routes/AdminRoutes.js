@@ -12,6 +12,7 @@ const AdminAnnouncementController = require("../Controllers/Admin/AdminAnnouceme
 const AdminTicketsController = require("../Controllers/Admin/AdminTicketsController");
 const AdminReqController = require("../Controllers/Admin/AdminReqController");
 const DonationController = require("../Controllers/Admin/donationController")
+const AdminGoodsController = require("../Controllers/Admin/AdminGoodsDonationController");
 
 /**
  * #####################################################################################
@@ -70,9 +71,20 @@ router.delete("/Donor_List/Donors/:id", AdminDonorController.removeDonor);
 router.post("/register/crew_member", AdminCrewMemController.crewMember_signup);
 router.get("/view/crew_member", AdminCrewMemController.view_crewMembers);
 router.get("/get_members", AdminCrewMemController.get_members);
+// router.post(
+//   "/assign/crew_member",
+//   AdminCrewMemController.crewMember_assignTask
+// );
+
+/**
+ * #####################################################################################
+ * Donations routes -  getone, getAll, remove, assign member
+ * #####################################################################################
+ */
+
 router.post(
-  "/assign/crew_member",
-  AdminCrewMemController.crewMember_assignTask
+  "/assign/goodDonation/:id1/member/:id2",
+  AdminGoodsController.assign_Goods_Donation_To_Member
 );
 
 /**

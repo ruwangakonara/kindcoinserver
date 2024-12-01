@@ -10,7 +10,9 @@ async function getAllBeneficiaries(req, res) {
         const sanitizedRequests = benificiaries.map((request) => ({
             ...request._doc,
             user_id: request.user_id || { name: 'Unknown', email: 'Unknown' , address: 'Unknown', phoneNo: 'Unknown' },
-            documents: [request.image1, request.image2, request.image3, request.certficate_image].filter(Boolean),
+            documents: [request.image1 ? `${req.protocol}://${req.get('host')}/public/${request.image1}` : null,
+                request.image2 ? `${req.protocol}://${req.get('host')}/public/${request.image2}` : null,
+                request.image3 ? `${req.protocol}://${req.get('host')}/public/${request.image3}` : null].filter(Boolean)
         }));
 
         res.status(200).json({ benificiaries: sanitizedRequests });
