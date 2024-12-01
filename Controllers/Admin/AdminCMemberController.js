@@ -12,7 +12,7 @@ async function crewMember_signup(req, res) {
     // status = "crewmember";
     const {
       name,
-      // noOfOperations,
+      noOfOperations,
       // stellarid,
       // town,
       // profile_image,
@@ -36,7 +36,7 @@ async function crewMember_signup(req, res) {
     const crewMember = await CrewMember.create({
       user_id,
       name,
-      // noOfOperations,
+      noOfOperations,
       // stellarid,
       // town,
       // profile_image,
@@ -47,7 +47,7 @@ async function crewMember_signup(req, res) {
     });
     console.log("Crew Member Succesfully registered");
     console.log(crewMember);
-    res.sendStatus(200);
+    res.sendStatus(201);
   } catch (err) {
     res.sendStatus(400);
     console.log(err);
@@ -69,29 +69,62 @@ async function crewMember_signup(req, res) {
 }
  */
 
-async function crewMember_update(req, res) {
+// async function crewMember_update(req, res) {
+//   try {
+//   } catch (e) {}
+// }
+
+async function crewMember_delete(req, res) {
   try {
-  } catch (e) {}
+    const { user_id } = req.params.id;
+    const member = await CrewMember.findOneAndDelete(user_id);
+    res.status(200).json({ member });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ error: error.message });
+  }
 }
 
 // assign a crew member for a goods donation task
-async function crewMember_assignTask(req, res) {
-  try {
-    // logic => get all goods donations. click assign . view members. choose a member.
-  } catch (e) {}
-}
+// async function crewMember_assignTask(req, res) {
+//   try {
+//     // logic => get all goods donations. click assign . view members. choose a member.
+//   } catch (e) {}
+// }
 
 // view all crew members
 async function view_crewMembers(req, res) {
   try {
-  } catch (e) {}
+    console.log("view members");
+    const members = await CrewMember.find().populate("user_id");
+    res.status(200).json(members);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
+}
+
+// view a single crew member
+async function view_single_member(req, res) {
+  const user_id = req.params.id;
+
+  try {
+    console.log("single member");
+    const members = await CrewMember.find().populate("user_id");
+    res.status(200).json(members);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ error: error.message });
+  }
 }
 
 //
 
 module.exports = {
   crewMember_signup,
-  crewMember_update,
-  crewMember_assignTask,
+  // crewMember_update,
+  // crewMember_assignTask,
   view_crewMembers,
+  view_single_member,
+  crewMember_delete,
 };

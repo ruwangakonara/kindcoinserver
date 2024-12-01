@@ -69,6 +69,12 @@ router.delete("/Donor_List/Donors/:id", AdminDonorController.removeDonor);
  */
 router.post("/register/crew_member", AdminCrewMemController.crewMember_signup);
 router.get("/view/crew_member", AdminCrewMemController.view_crewMembers);
+router.get("/view/crew_member/:id", AdminCrewMemController.view_single_member);
+// router.put("/edit/crew_member/:id", AdminCrewMemController.crewMember_update);
+router.delete(
+  "/delete/crew_member/:id",
+  AdminCrewMemController.crewMember_delete
+);
 // router.post(
 //   "/assign/crew_member",
 //   AdminCrewMemController.crewMember_assignTask
@@ -76,7 +82,7 @@ router.get("/view/crew_member", AdminCrewMemController.view_crewMembers);
 
 /**
  * #####################################################################################
- * Donations routes -  getone, getAll, remove, assign member
+ * Donations routes -  getone, getAll, assign member, getTotalDonations, getDonationsByDonor, receivedDonationsByBeneficiary
  * #####################################################################################
  */
 
@@ -87,13 +93,13 @@ router.post(
 
 /**
  * #####################################################################################
- * complaints routes - getOne, getAll another operations.
+ * Tickets routes - getOne, getAll another operations.
  * #####################################################################################
  */
 
 /**
  * #####################################################################################
- * statistics routes - getTotalDonations, getDonationsByDonor, receivedDonationsByBeneficiary
+ * statistics routes -
  * #####################################################################################
  */
 
