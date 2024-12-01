@@ -1,7 +1,7 @@
 const User = require("../../models/user");
 const Donor = require("../../models/donor");
 const Beneficiary = require("../../models/beneficiary");
-const CrewMember = require("../../models/member");
+// const CrewMember = require("../../models/member");
 const Admin = require("../../models/admin");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -252,11 +252,12 @@ async function admin_signup(req, res) {
 async function signin(req, res) {
   try {
     const { username, password } = req.body;
+    console.log(username);
 
     const user = await User.findOne({ username });
 
     if (!user) {
-      console.log("Nigga!!");
+      console.log("Niggab!!");
       return res.sendStatus(420);
     }
 
@@ -287,7 +288,7 @@ async function signin(req, res) {
       res.status(200).json({ user: user, beneficiary: beneficiary });
     } else if (user.status === "crew_member") {
       console.log("crew member signin");
-      const crewMember = await CrewMember.findOne({ user_id: user._id });
+      const crewMember = await Member.findOne({ user_id: user._id });
       res.status(200).json({ user: user, member: crewMember });
     } else {
       const admin = await Admin.findOne({ user_id: user._id });

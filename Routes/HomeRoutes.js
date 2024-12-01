@@ -22,7 +22,7 @@ router.post("/forgot", ForgotController.forgotPassword)
 router.post("/reset", ForgotController.resetPassword)
 
 // registration endpoint for crew member. this has been migrated to the admin crew member controller
-router.post("/crew_memeber_signup", UserController.crewMember_registration);
+// router.post("/crew_memeber_signup", UserController.crewMember_registration);
 router.post("/admin_signup", UserController.admin_signup);
 
 module.exports = router;
