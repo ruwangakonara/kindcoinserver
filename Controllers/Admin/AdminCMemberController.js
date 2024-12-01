@@ -148,7 +148,7 @@ module.exports = {
   // crewMember_update,
   // crewMember_assignTask,
   view_crewMembers,
-  get_members
+  get_members,
   view_single_member,
   crewMember_delete,
 };
