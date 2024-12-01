@@ -1,13 +1,14 @@
 const CrewMember = require("../Home/UserController").Member;
 const User = require("../Home/UserController").User;
 const bcrypt = require("bcryptjs");
+const Donor = require("../../models/donor");
 
 // logic to register a crew member to the system and update his/her details and get all crew members, get a single crew member details, remove crew member from the system
 
 // register/signup a crew member
 async function crewMember_signup(req, res) {
   try {
-    console.log("Crew Mem Registration Start");
+    console.log("Crew Mem Registration Start X");
     // status has to be "crewmember" - it has to be come through the payload actually. tested through api client.
     // status = "crewmember";
     const {
@@ -118,6 +119,28 @@ async function view_single_member(req, res) {
   }
 }
 
+async function get_members(req, res) {
+  try {
+    const members = await CrewMember.find();
+
+    return res.status(200).json({ members });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error.message });
+  }
+}
+
+async function get_members(req, res) {
+  try {
+    const members = await CrewMember.find();
+
+    return res.status(200).json({ members });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({ error: error.message });
+  }
+}
+
 //
 
 module.exports = {
@@ -125,6 +148,7 @@ module.exports = {
   // crewMember_update,
   // crewMember_assignTask,
   view_crewMembers,
+  get_members
   view_single_member,
   crewMember_delete,
 };

@@ -128,7 +128,6 @@ app.use("/admin", adminRoutes);
 
 // app.use("/crew", crewRoutes);
 
-app.use("/admin", adminRoutes);
 
 app.get("/notes/:id", NoteController.getNote);
 
