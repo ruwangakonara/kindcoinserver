@@ -27,11 +27,19 @@ async function getAllDonations(req, res) {
             verified: donation.verified,
             description: donation.description || 'No description provided', // Default description if not present
             documents: [
-                donation.image1 ? `${req.protocol}://${req.get('host')}/public/${donation.image1}` : null,
-                donation.image2 ? `${req.protocol}://${req.get('host')}/public/${donation.image2}` : null,
-                donation.image3 ? `${req.protocol}://${req.get('host')}/public/${donation.image3}` : null,
-                donation.image4 ? `${req.protocol}://${req.get('host')}/public/${donation.image4}` : null
-            ].filter(Boolean), // Remove null entries
+                donation.image1 !== "https://via.placeholder.com/300" 
+                    ? `http://localhost:9013/images/donations/${donation.image1}` 
+                    : "https://via.placeholder.com/300",
+                donation.image2 !== "https://via.placeholder.com/300" 
+                    ? `http://localhost:9013/images/donations/${donation.image2}` 
+                    : "https://via.placeholder.com/300",
+                donation.image3 !== "https://via.placeholder.com/300" 
+                    ? `http://localhost:9013/images/donations/${donation.image3}` 
+                    : "https://via.placeholder.com/300",
+                donation.image4 !== "https://via.placeholder.com/300" 
+                    ? `http://localhost:9013/images/donations/${donation.image4}` 
+                    : "https://via.placeholder.com/300"
+            ].filter(Boolean),
             status: donation.verified ? 'Verified' : 'Not Verified',
             attestationFee: donation.attestation_fee || 'Not Set' // Optional field for attestation fee
         }));

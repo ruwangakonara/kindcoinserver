@@ -28,15 +28,27 @@ async function updateBeneficiaryStatus(req, res) {
     try {
         const { recipientId, status } = req.body;
         if (!['Pending', 'Approved', 'Rejected'].includes(status)) {
-            return res.status(400).json({ error: 'Invalid status value' });
+            return res.status(400).json({
+                 error: 'Invalid status value' });
         }
 
         if (!recipientId) {
             return res.status(400).json({ error: 'recipientId is required' });
         }
 
+        const updateData = {
+            status: status
+        };
+
+        if (status === 'Approved') {
+            updateData.verified = true;
+        }
+        else if (status === 'Rejected' || status === 'Pending') {
+            updateData.verified = false;
+        }
+
         console.log('Received request with user_id:', recipientId, 'and status:', status);
-        const updatedBeneficiary = await Recepients.findByIdAndUpdate(recipientId, { status }, { new: true });
+        const updatedBeneficiary = await Recepients.findByIdAndUpdate(recipientId, updateData, { status }, { new: true });
         console.log("Successfully updated request status", updatedBeneficiary);
         
         if (!updatedBeneficiary) {
