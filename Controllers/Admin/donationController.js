@@ -101,10 +101,32 @@ async function assignMember(req, res) {
 
 }
 
+async function getMemberDonations(req, res) {
+    try {
+        const member_id = new mongoose.Types.ObjectId(req.params.member_id);
+        
+        const donations = await getDonationsWithDonorBeneficiaryRequestDetails({ 
+            member_id: member_id,
+            type: 'goods'
+        });
+
+        if (!donations) {
+            return res.status(404).json({ message: 'No donations found' });
+        }
+
+        res.status(200).json({ donations });
+    } catch (error) {
+        console.error('Error fetching member donations:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
 
 module.exports = {
 
     assignMember,
-    getDonations2
+    getDonations2,
+    getMemberDonations,
+    getDonationsWithDonorBeneficiaryRequestDetails
 
 }
