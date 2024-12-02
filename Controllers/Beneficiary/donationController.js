@@ -165,9 +165,107 @@ async function acceptDonation(req, res){
     }
 }
 
+
+
+async function updateDescription(req, res){
+
+    try{
+        console.log("got here")
+        const donation_id = new mongoose.Types.ObjectId(req.body.donation_id);
+
+
+        const updatedDona = await Donation.findByIdAndUpdate(donation_id, {usage_description: req.body.description, edited: Date.now()}, {new: true})
+
+        if(!updatedDona.donor_satisfied){
+            const notification = {
+                title:"Donation Usage Details Changed",
+                donor_id: updatedDona.donor_id,
+                beneficiary_id: updatedDona.beneficiary_id,
+                request_id: updatedDona.request_id,
+                donation_id: updatedDona._id
+            }
+
+            await DonorNotification.create(notification)
+        }
+
+        console.log("diddy")
+
+        res.status(200).json({donation: updatedDona});
+    }catch (error){
+        console.log(error)
+        res.status(400).json({error: err.message});
+
+    }
+
+}
+
+
+async function updateImages(req, res) {
+
+    try{
+
+
+        const donation_id = new mongoose.Types.ObjectId(req.body.donation_id);
+
+        const donation = await Donation.findOne({_id: donation_id})
+
+        console.log(req.body)
+        console.log(req.sub)
+        //
+        // if(donation.user_id != req.sub){
+        //
+        //     return res.status(400).send()
+        // }
+
+        const {
+            usage_image1,
+            usage_image2,
+            usage_image3,
+            usage_image4,
+            usage_image5
+
+        } = req.files;
+        // const id = req.body.donation_id
+        const updated = {
+            usage_image1: usage_image1 ? usage_image1[0].filename : request.usage_image1,
+            usage_image2: usage_image2 ? usage_image2[0].filename : request.usage_image2,
+            usage_image3: usage_image3 ? usage_image3[0].filename : request.usage_image3,
+            usage_image4: usage_image4 ? usage_image4[0].filename : request.usage_image4,
+            usage_image5: usage_image5 ? usage_image5[0].filename : request.usage_image5,
+
+        }
+
+
+        const updatedDona = await Donation.findByIdAndUpdate(donation_id, updated, {new: true})
+        if(!updatedDona.donor_satisfied){
+            const notification = {
+                title:"Donation Usage Details Changed",
+                donor_id: updatedDona.donor_id,
+                beneficiary_id: updatedDona.beneficiary_id,
+                request_id: updatedDona.request_id,
+                donation_id: updatedDona._id
+            }
+
+            await DonorNotification.create(notification)
+        }
+        console.log("yello")
+
+        res.status(201).json({donation: updatedDona});
+
+    } catch(err){
+        res.status(400).json({error: err.message});
+    }
+
+
+}
+
+
+
 module.exports = {
     getDonationyo,
     getDonations2,
     acceptDonation,
-    getDonation
+    getDonation,
+    updateImages,
+    updateDescription
 }

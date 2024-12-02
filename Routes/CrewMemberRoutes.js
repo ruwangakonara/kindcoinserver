@@ -12,6 +12,8 @@ const donationProof = require("../Controllers/CrewMember/donationProof");
 const recepientController = require("../Controllers/CrewMember/recepientController");
 const requestController = require("../Controllers/CrewMember/RequestController");
 const adminController = require("../Controllers/Admin/donationController");
+const goodsController = require("../Controllers/CrewMember/goodsController");
+
 
 //requireCrewMemberAuth
 router.post("/get_donations", DonationController.getDonations2)
@@ -25,7 +27,9 @@ router.post("/dispatch", TokenController.dispatchTokens)
 router.get("/get_balance", TokenController.getDistributorBalance)
 router.post("/verify_goods_donation", DonationController.verifyGoodsDonation)
 router.post("/verify_monetary_donation", DonationController.verifyMonetaryDonation)
-router.get("/goods_donations", requireMemberAuth, adminController.getMemberDonations);
+// router.get("/goods_donations", requireMemberAuth, adminController.getMemberDonations);
+router.get("/goods_donations", goodsController.getMemberDonations);
+router.put('/update-donation-status', requireMemberAuth, goodsController.updateDonationStatus);
 
 
 router.post("/verify_donation_doc", DonationController.verifyDonationDoc);

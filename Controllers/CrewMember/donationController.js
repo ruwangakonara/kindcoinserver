@@ -21,7 +21,8 @@ async function verifyMonetaryDonation(req, res) {
         await Request.findByIdAndUpdate(donation.request_id, {$inc: { raised: donation?.value}})
 
         console.log("updated")
-        const beneficiary = await Beneficiary.findById(request.beneficiary_id);
+        const beneficiary = await Beneficiary.findByIdAndUpdate(request.beneficiary_id,{$inc: { raised_amount: donation?.value}}, {new: true});
+
 
 
         const donornotification = {
@@ -80,8 +81,9 @@ async function verifyGoodsDonation(req, res) {
         const request = await Request.findByID(donation.request_id);
 
         await Request.findByIdAndUpdate(donation.request_id, {$inc: { raised: donation?.value}})
+        // await Beneficiary.findByIdAndUpdate(request.beneficiary_id, )
 
-        const beneficiary = await Beneficiary.findById(request.beneficiary_id);
+        const beneficiary = await Beneficiary.findByIdAndUpdate(request.beneficiary_id,{$inc: { raised_amount: donation?.value}}, {new: true});
 
 
         const donornotification = {

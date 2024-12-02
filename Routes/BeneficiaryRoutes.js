@@ -14,6 +14,7 @@ const donationController = require("../Controllers/Beneficiary/donationControlle
 const homeController = require("../Controllers/Beneficiary/HomeController.jsx");
 const LeaderboardController = require("../Controllers/Beneficiary/leaderboardController");
 const NotificationController = require("../Controllers/Beneficiary/NotificationController");
+const uploader_donation = require("../Middleware/Beneficiary/uploader_donation")
 
 // router.put("/update_account", requireBeneficiaryAuth, uploader.single("profileImage"), accountController.updateBeneficiary);
 router.get("/get_account", requireBeneficiaryAuth, accountController.get_account);
@@ -43,6 +44,17 @@ router.put("/update_request", requireBeneficiaryAuth,
 
 router.post("/close_request", requireBeneficiaryAuth, requestController.closeRequest)
 
+router.put("/update_usage_images", requireBeneficiaryAuth,
+    uploader_donation.fields([
+        { name: 'usage_image1', maxCount: 1 },
+        { name: 'usage_image2', maxCount: 1 },
+        { name: 'usage_image3', maxCount: 1 },
+        { name: 'usage_image4', maxCount: 1 },
+        { name: 'usage_image5', maxCount: 1 },
+    ]),donationController.updateImages)
+
+router.post("/close_request", requireBeneficiaryAuth, requestController.closeRequest)
+
 
 router.post("/get_requests", requireBeneficiaryAuth, otherRequestController.getRequests)
 router.post("/getrequest", requireBeneficiaryAuth, otherRequestController.getRequestyo)
@@ -60,6 +72,7 @@ router.post("/get_beneficiary", requireBeneficiaryAuth, userController.getBenefi
 router.post("/get_donations", requireBeneficiaryAuth, donationController.getDonations2)
 router.post("/get_donation", requireBeneficiaryAuth, donationController.getDonation)
 router.post("/accept_donation", requireBeneficiaryAuth, donationController.acceptDonation)
+router.post("/update_usage_description", requireBeneficiaryAuth, donationController.updateDescription)
 
 router.get("/get_notifications", requireBeneficiaryAuth, NotificationController.getNotifications)
 router.get("/get_notifications_sidebar", requireBeneficiaryAuth, NotificationController.getNotificationV)
