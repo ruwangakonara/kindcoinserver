@@ -5,6 +5,7 @@ async function requireMemberAuth(req, res, next) {
     try {
         const token = req.cookies.Authorization;
         if (!token) {
+            console.log("no cookie")
             return res.sendStatus(401); // Unauthorized if no token is present
         }
 

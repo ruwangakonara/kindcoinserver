@@ -200,6 +200,11 @@ const donationSchema = new mongoose.Schema({
     donor_ticket_id:{
         type: mongoose.Types.ObjectId,
         ref: "Ticket"
+    },
+
+    profit:{
+        type: Number,
+        default:0
     }
 
 })

@@ -25,7 +25,7 @@ router.post("/dispatch", TokenController.dispatchTokens)
 router.get("/get_balance", TokenController.getDistributorBalance)
 router.post("/verify_goods_donation", DonationController.verifyGoodsDonation)
 router.post("/verify_monetary_donation", DonationController.verifyMonetaryDonation)
-router.get("/goods_donations", requireMemberAuth, adminController.getMemberDonations);
+router.post("/goods_donations", adminController.getMemberDonations);
 
 
 router.post("/verify_donation_doc", DonationController.verifyDonationDoc);
