@@ -191,7 +191,7 @@ async function transfer(req, res) {
         }
         await DonorNotification.create(notification)
 
-        await transferToCompany(tokenAmount);
+        await transferToCompany(donation_id ,tokenAmount);
 
         //
         res.status(200).json({ message: 'Donation successfully transferred', transactionResult, updated_donor, updated_donation });
@@ -201,7 +201,7 @@ async function transfer(req, res) {
     }
 }
 
-async function transferToCompany(tokenAmount) {
+async function transferToCompany(donation_id, tokenAmount) {
     try {
         console.log("Initiating company transfer...");
 
@@ -231,6 +231,8 @@ async function transferToCompany(tokenAmount) {
 
         // Submit the transaction to the Stellar network
         const transactionResult = await server.submitTransaction(transaction);
+
+        await Donation.findByIdAndUpdate(donation_id, {profit: companyShare})
 
         console.log('Company transfer successful:', transactionResult);
 

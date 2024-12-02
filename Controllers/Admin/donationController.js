@@ -103,7 +103,10 @@ async function assignMember(req, res) {
 
 async function getMemberDonations(req, res) {
     try {
-        const member_id = new mongoose.Types.ObjectId(req.params.member_id);
+
+        console.log("crew here")
+
+        const member_id = new mongoose.Types.ObjectId(req.body.member_id);
         
         const donations = await getDonationsWithDonorBeneficiaryRequestDetails({ 
             member_id: member_id,
