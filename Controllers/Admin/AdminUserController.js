@@ -8,8 +8,9 @@ const mongoose = require("mongoose");
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = User.find(req.body);
-    res.status(200).json({ requests: users });
+    const users = await User.find();
+    console.log(users);
+    res.status(200).json(users);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -17,8 +18,9 @@ const getAllUsers = async (req, res) => {
 
 const removeUser = async (req, res) => {
   try {
-    const user = User.deleteOne(req.params.id);
-    res.status(200).json({ requests: user });
+    const users = User.deleteOne(req.params.id);
+    console.log("user fetched");
+    res.status(200).json(users);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

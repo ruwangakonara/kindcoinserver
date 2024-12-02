@@ -11,8 +11,10 @@ const AdminDonorController = require("../Controllers/Admin/AdminDonController");
 const AdminAnnouncementController = require("../Controllers/Admin/AdminAnnoucementController");
 const AdminTicketsController = require("../Controllers/Admin/AdminTicketsController");
 const AdminReqController = require("../Controllers/Admin/AdminReqController");
-const DonationController = require("../Controllers/Admin/donationController")
+const DonationController = require("../Controllers/Admin/donationController");
 const AdminGoodsController = require("../Controllers/Admin/AdminGoodsDonationController");
+const AdminUserController = require("../Controllers/Admin/AdminUserController");
+const AdminReportController = require("../Controllers/Admin/AdminReportController");
 
 /**
  * #####################################################################################
@@ -89,7 +91,7 @@ router.post(
 
 /**
  * #####################################################################################
- * complaints routes - getOne, getAll another operations.
+ * statistics routes - getTotalDonations, getDonationsByDonor, receivedDonationsByBeneficiary
  * #####################################################################################
  */
 
@@ -98,6 +100,13 @@ router.post(
  * statistics routes - getTotalDonations, getDonationsByDonor, receivedDonationsByBeneficiary
  * #####################################################################################
  */
+
+router.get("/view/reports/users", AdminUserController.getAllUsers);
+router.get("/view/reports/summary", AdminReportController.getSummary);
+router.get(
+  "/view/reports/donationSummary",
+  AdminReportController.getDonationsWithDonorDetails
+);
 
 /**
  * #####################################################################################
@@ -167,9 +176,7 @@ router.get("/tickets", AdminTicketsController.getAllTickets);
  */
 router.get("/requests", AdminReqController.getAllRequests);
 
-
 router.post("/get_donations_for_assign", DonationController.getDonations2);
 router.post("/assign_member", DonationController.assignMember);
-
 
 module.exports = router;

@@ -24,6 +24,16 @@ async function crewMember_signup(req, res) {
       status,
     } = req.body;
 
+    // Check if the username already exists in the User or Member collection
+    const existingUser = await User.findOne({ username: userName });
+    const existingMember = await CrewMember.findOne({ username: userName });
+
+    if (existingUser || existingMember) {
+      return res.status(400).json({
+        error: "Username already exists. Please choose a different username.",
+      });
+    }
+
     const hashedpass = bcrypt.hashSync(passWord, 8);
 
     const user = await User.create({
@@ -89,10 +99,11 @@ async function view_crewMembers(req, res) {
 }
 
 async function get_members(req, res) {
-  try{
+  try {
     const members = await CrewMember.find();
 
-    return res.status(200).json({members})
+    console.log(members);
+    return res.status(200).json({ members });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ error: error.message });
@@ -106,5 +117,5 @@ module.exports = {
   crewMember_update,
   crewMember_assignTask,
   view_crewMembers,
-  get_members
+  get_members,
 };

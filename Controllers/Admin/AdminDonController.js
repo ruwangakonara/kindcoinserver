@@ -18,7 +18,7 @@ async function getDonor(req, res) {
   try {
     const { user_id } = req.body;
     const donor = await Donor.findOne(user_id);
-    console.log(donor);
+    console.log(donor.username);
     res.status(200).json(donor);
   } catch (error) {
     console.log(error);
