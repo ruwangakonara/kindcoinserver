@@ -35,9 +35,21 @@ async function updateRequestStatus(req, res) {
             });
         }
 
+        const updateData = {
+            status: status
+        };
+
+        if (status === 'Published') {
+            updateData.verified = true;
+        }
+        else if (status === 'Rejected' || status === 'Pending') {
+            updateData.verified = false;
+        }
+
         // Find and update the request
         const updatedRequest = await Request.findByIdAndUpdate(
-            requestId, 
+            requestId,
+            updateData,
             { status }, 
             { 
                 new: true,  // Return the updated document
