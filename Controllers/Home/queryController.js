@@ -15,4 +15,5 @@ async function insertQuery(req, res){
 
 module.exports = {
     insertQuery,
+    Query
 }

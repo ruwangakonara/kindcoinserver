@@ -159,7 +159,49 @@ const donationSchema = new mongoose.Schema({
     attestation_fee:{
         type: Number,
         default:0
+    },
+
+    usage_image1:{
+        type: String,
+        default: 'https://via.placeholder.com/300'
+    },
+    usage_image2:{
+        type: String,
+        default: 'https://via.placeholder.com/300'
+    },
+    usage_image3:{
+        type: String,
+        default: 'https://via.placeholder.com/300'
+    },
+    usage_image4:{
+        type: String,
+        default: 'https://via.placeholder.com/300'
+    },
+    usage_image5:{
+        type: String,
+        default: 'https://via.placeholder.com/300'
+    },
+
+    usage_description:{
+        type:String,
+        default: ""
+    },
+
+    edited:{
+        type: Date,
+        default: Date.now
+    },
+
+    donor_satisfied:{
+        type: Boolean,
+        default:true
+    },
+
+    donor_ticket_id:{
+        type: mongoose.Types.ObjectId,
+        ref: "Ticket"
     }
+
 })
 
 donationSchema.pre('save', function (next) {
