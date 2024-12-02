@@ -102,6 +102,10 @@ router.post(
  */
 
 router.get("/view/reports/users", AdminUserController.getAllUsers);
+router.get(
+  "/view/reports/beneficiaries",
+  AdminReportController.getBeneficiaryReport
+);
 router.get("/view/reports/summary", AdminReportController.getSummary);
 router.get(
   "/view/reports/donationSummary",
