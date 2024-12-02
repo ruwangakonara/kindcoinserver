@@ -24,6 +24,11 @@ const querySchema = new Schema({
     type: Date,
     default: Date.now,
   },
+
+  replied: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const Query = mongoose.model("Query", querySchema);

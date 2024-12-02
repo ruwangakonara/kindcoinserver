@@ -1,5 +1,5 @@
 const Ticket = require("../../models/ticket");
-const {createRequest} = require("./RequestController");
+// const {createRequest} = require("./RequestController");
 const mongoose = require("mongoose");
 
 async function raiseTicket(req, res) {

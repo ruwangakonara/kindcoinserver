@@ -1,6 +1,7 @@
 const donation = require("./donation_cycle_break")
 const Donation = donation.Donation
 const request = require("../Beneficiary/request_cycle_breaker");
+const Ticket = require("../Beneficiary/ticketController").Ticket
 
 const Request = request.Request
 const beneficiary = require("../../Controllers/Home/UserController")
@@ -188,7 +189,7 @@ async function getDonations(req, res) {
 
 
         const donations = await getDonationsWithRequestDetails(req.body);
-        console.log(donations);
+        // console.log(donations);
 
         res.status(200).json({donations: donations});
 
@@ -204,18 +205,18 @@ async function getDonation(req, res) {
     try{
 
         const donation = await Donation.findOne(req.body);
-        console.log(donation)
+        // console.log(donation)
 
         const request = await  Request.findById(donation.request_id);
-        console.log("passed")
+        // console.log("passed")
 
         const beneficiary = await  Beneficiary.findById(donation.beneficiary_id);
-        console.log("passed bene")
+        // console.log("passed bene")
 
         if(donation.type === "goods" && donation.member_id){
             const member = await Member.findById(donation.member_id);
 
-            console.log("arse")
+            // console.log("arse")
             res.status(200).json({donation: donation, request: request, beneficiary: beneficiary, member: member});
             return
         }
@@ -379,6 +380,65 @@ async function deleteDonation(req, res) {
     }
 }
 
+
+async function satisfaction(req, res) {
+
+    try{
+        console.log(req.body)
+        const { satisfied, donation_id } = req.body;
+
+        const donation = await Donation.findOne({_id: new mongoose.Types.ObjectId(donation_id)})
+
+        if (!satisfied && (donation.donor_satisfied == true)){
+
+            console.log("yup")
+            const ticket_data = {
+                user_id: req.sub,
+                title: "Donor dissatisfied with donation usage",
+                description: "Donor " + donation.donor_id + " is dissatisfied about the usage of donation " + donation_id + " by beneficiary " + donation.beneficiary_id
+            }
+
+            const ticket = await Ticket.create(ticket_data)
+
+            await Donation.findByIdAndUpdate(donation_id, {donor_satisfied: false, donor_ticket_id: ticket._id})
+
+            const notification = {
+                title:"Donation Usage Reported Unsatisfactory",
+                donor_id: donation.donor_id,
+                beneficiary_id: donation.beneficiary_id,
+                request_id: donation.request_id,
+                donation_id: donation._id,
+            }
+            await BeneficiaryNotification.create(notification)
+
+        } else if (satisfied && (donation.donor_satisfied == false)){
+
+            await Ticket.deleteOne({_id: donation.donor_ticket_id})
+            await Donation.findByIdAndUpdate(donation_id, {donor_satisfied: true, donor_ticket_id: null})
+
+            const notification = {
+                title:"Donation Usage Unsatisfactory Report Revoked",
+                donor_id: donation.donor_id,
+                beneficiary_id: donation.beneficiary_id,
+                request_id: donation.request_id,
+                donation_id: donation._id,
+            }
+            await BeneficiaryNotification.create(notification)
+
+        } else{
+
+        }
+
+        res.status(200).send()
+
+    } catch (error){
+        console.log(error)
+        res.status(400).json({error: error.message});
+    }
+
+
+}
+
 module.exports = {
     createDonation,
     updateDonation,
@@ -387,5 +447,6 @@ module.exports = {
     getDonations,
     updateImages,
     updateDocTraID,
-    Member
+    Member,
+    satisfaction
 }
