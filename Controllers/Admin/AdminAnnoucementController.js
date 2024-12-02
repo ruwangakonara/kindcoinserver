@@ -135,7 +135,7 @@ async function get_all_announcements(req, res) {
   try {
     const announcements = await Announcement.find();
     console.log(announcements);
-    res.status(200).json({ announcements });
+    res.status(200).json(announcements);
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: error.message });
