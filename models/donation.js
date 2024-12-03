@@ -67,6 +67,12 @@ const donationSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    
+    status: {
+        type: String,
+        enum: ['Pending', 'Published', 'Rejected'],
+        default: 'Pending'
+    },
 
     rewarded:{
         type: Boolean,
