@@ -11,7 +11,20 @@ async function getAllRequests(req, res) {
             ...request._doc,
             user_id: request.user_id || { username: 'Unknown', email: 'Unknown' },
             beneficiary_id: request.beneficiary_id || { name: 'Unknown', phoneNo: 'Unknown' },
-            documents: [request.image1, request.image2, request.image3, request.certficate_image].filter(Boolean),
+            documents: [
+                request.image1 !== "https://via.placeholder.com/300"
+                    ? `http://localhost:9013/images/donations/${request.image1}`
+                    : "https://via.placeholder.com/300",
+                request.image2 !== "https://via.placeholder.com/300"
+                    ? `http://localhost:9013/images/donations/${request.image2}`
+                    : "https://via.placeholder.com/300",
+                request.image3 !== "https://via.placeholder.com/300"
+                    ? `http://localhost:9013/images/donations/${request.image3}`
+                    : "https://via.placeholder.com/300",
+                request.certificate_image !== "https://via.placeholder.com/300"
+                    ? `http://localhost:9013/images/donations/${request.certificate_image}`
+                    : "https://via.placeholder.com/300"
+            ].filter(Boolean),
         }));
 
         res.status(200).json({ requests: sanitizedRequests });
@@ -25,13 +38,13 @@ async function getAllRequests(req, res) {
 async function updateRequestStatus(req, res) {
     try {
         const { requestId, status } = req.body;
-        
+
         // Validate status
         const validStatuses = ['Pending', 'Published', 'Rejected'];
         if (!validStatuses.includes(status)) {
-            return res.status(400).json({ 
-                error: 'Invalid status value', 
-                validStatuses 
+            return res.status(400).json({
+                error: 'Invalid status value',
+                validStatuses
             });
         }
 
@@ -50,8 +63,8 @@ async function updateRequestStatus(req, res) {
         const updatedRequest = await Request.findByIdAndUpdate(
             requestId,
             updateData,
-            { status }, 
-            { 
+            { status },
+            {
                 new: true,  // Return the updated document
                 runValidators: true  // Run model validations
             }
@@ -63,15 +76,15 @@ async function updateRequestStatus(req, res) {
         }
 
         // Successful response
-        res.status(200).json({ 
+        res.status(200).json({
             message: 'Request status updated successfully',
-            request: updatedRequest 
+            request: updatedRequest
         });
     } catch (err) {
         console.error('Update status error:', err);
-        res.status(500).json({ 
-            error: 'Internal server error', 
-            details: err.message 
+        res.status(500).json({
+            error: 'Internal server error',
+            details: err.message
         });
     }
 }

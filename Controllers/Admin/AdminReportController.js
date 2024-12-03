@@ -6,7 +6,7 @@ const Request = require("../Beneficiary/request_cycle_breaker").Request;
 const Donor = UserController.Donor;
 const Beneficiary = UserController.Beneficiary;
 
-async function getSummary() {
+const getSummary = async (req, res) => {
   try {
     // Aggregating donation data
     const donationSummary = await Donation.aggregate([
@@ -76,52 +76,72 @@ async function getSummary() {
       requestSummary: requestSummary,
     };
     console.log("This is the Report:", report);
-
-    return report;
+    res.status(200).json(report);
+    // return report;
   } catch (error) {
     throw new Error("Error generating summary: " + error.message);
   }
-}
+};
 
-async function getBeneficiaryReport(filterCriteria) {
+const getBeneficiaryReport = async (req, res) => {
+  // Example filter criteria to get only approved and verified beneficiaries
+  const filterCriteria = { status: "Approved", verified: true };
+
   try {
     const results = await Beneficiary.aggregate([
       { $match: filterCriteria },
       {
         $lookup: {
           from: "requests",
-          localField: "beneficiary_id",
-          foreignField: "_id",
+          localField: "_id",
+          foreignField: "beneficiary_id",
           as: "requests",
         },
       },
-      { $unwind: "$requests" },
+      { $unwind: { path: "$requests", preserveNullAndEmptyArrays: true } },
+      {
+        $group: {
+          _id: "$_id",
+          username: { $first: "$username" },
+          district: { $first: "$district" },
+          phoneNo: { $first: "$phoneNo" },
+          verified: { $first: "$verified" },
+          status: { $first: "$status" },
+          created_at: { $first: "$created_at" },
+          raised_amount: { $sum: "$requests.amount" },
+        },
+      },
       {
         $project: {
-          name: 1,
-          email: 1,
-          "requests.title": 1,
-          "requests.description": 1,
+          username: 1,
+          district: 1,
+          phoneNo: 1,
+          verified: 1,
+          status: 1,
+          created_at: 1,
+          raised_amount: 1,
         },
       },
     ]);
-
-    return results;
+    console.log(results);
+    res.status(200).json(results);
+    // return results;
   } catch (error) {
     console.error("Error retrieving beneficiaries:", error);
     throw error;
   }
-}
+};
 
-async function getDonationsWithDonorDetails() {
+const getDonationsWithDonorDetails = async (req, res) => {
   const filterCriteria = {
     verified: true,
     reward: false,
-    type: "monetary",
+    type: { $in: ["monetary", "goods"] }, // Match both "monetary" and "goods"
     donation_date: {
       $gte: new Date(new Date().setMonth(new Date().getMonth() - 6)), // Donations in the last 6 months
     },
   };
+
   try {
     const results = await Donation.aggregate([
       { $match: filterCriteria },
@@ -136,18 +156,11 @@ async function getDonationsWithDonorDetails() {
       { $unwind: "$donorDetails" },
       {
         $project: {
-          donation_id: 1,
-          title: 1,
-          description: 1,
+          donation_id: "$_id",
           amount: 1,
           value: 1,
           donation_date: 1,
-          "donorDetails.name": 1,
-          "donorDetails.email": 1,
-          phone: 1,
-          email: 1,
           created: 1,
-          verified: 1,
           rewarded: 1,
           goods: 1,
           attestation_fee: 1,
@@ -155,13 +168,15 @@ async function getDonationsWithDonorDetails() {
         },
       },
     ]);
-
-    return results;
+    console.log("wwwwwwwwwwwwwwwwwwwwwwwwwwww", results);
+    res.status(200).json(results);
+    // return results;
   } catch (error) {
+    res.status(400).json({ error: error.message });
     console.error("Error retrieving donations with donor details:", error);
     throw error;
   }
-}
+};
 
 module.exports = {
   getSummary,

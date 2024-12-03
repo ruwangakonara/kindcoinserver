@@ -13,7 +13,22 @@ const recepientController = require("../Controllers/CrewMember/recepientControll
 const requestController = require("../Controllers/CrewMember/RequestController");
 const adminController = require("../Controllers/Admin/donationController");
 const goodsController = require("../Controllers/CrewMember/goodsController");
+const crewController = require('../Controllers/CrewMember/crewProfileController');
 
+
+// router.get("/check-auth", (req, res, next) => {
+//     requireMemberAuth(req, res, () => {
+//         res.status(200).json({
+//             authenticated: true,
+//             user: {
+//                 id: req.user._id,
+//                 status: req.user.status
+//             }
+//         });
+//     });
+// });
+
+// router.use(requireMemberAuth);
 
 //requireCrewMemberAuth
 router.post("/get_donations", DonationController.getDonations2)
@@ -40,8 +55,12 @@ router.post("/verify_donation_doc", DonationController.verifyDonationDoc);
 router.get("/get_donation_proof", donationProof.getAllDonations)
 router.put("/update_donation_status", donationProof.updateDonationStatus)
 router.get("/get_recepient",  recepientController.getAllBeneficiaries)
-router.put("/update_recepient_status", recepientController.updateBeneficiaryStatus)
+router.put("/update_recepient_status",recepientController.updateBeneficiaryStatus)
 router.get("/get_request", requestController.getAllRequests)//Todo: Configure crew member auth
 router.put("/update_request_status", requestController.updateRequestStatus)//Todo: Configure crew member auth
+
+router.get('/profile', requireMemberAuth, crewController.getCrewProfile);
+router.put('/update-password', requireMemberAuth, crewController.updatePassword);
+router.post('/update-image', requireMemberAuth, crewController.updateProfileImage);
 
 module.exports = router;
