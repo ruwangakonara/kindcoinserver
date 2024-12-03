@@ -1,4 +1,4 @@
-const axios = require("axios")
+const axios = require('axios')
 const TEXT_RAZOR_API_KEY = "27b19674986f0631b7231fae9c7c70516357dd2bf3917e192871a7fb"; // Replace with your TextRazor API key
 
 async function textrazor(req, res) {

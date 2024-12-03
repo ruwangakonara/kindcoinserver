@@ -7,7 +7,8 @@ const goodSchema = new mongoose.Schema({
     },
     amount: {
         type: String,
-        required: true
+        required: true,
+        default: 1
     }
 });
 

@@ -27,7 +27,7 @@ async function getMemberDonations(req, res) {
         console.log("Member id: ", member._id);
         const donations = await Donation.find({
             member_id: member._id,
-            type: 'goods'
+            type: 'goods',
         })
             .populate('donor_id', 'name username phoneNo')
             .populate('beneficiary_id', 'name phoneNo email')
@@ -76,10 +76,11 @@ async function getMemberDonations(req, res) {
 
 async function updateDonationStatus(req, res) {
     try {
-        const { request_id, status } = req.body;
+        const { request_id, status, goods } = req.body;
 
         console.log('Incoming request_id raw:', request_id);
         console.log('Incoming status:', status);
+        console.log('Incoming goods:', goods);
 
         const donationId = new mongoose.Types.ObjectId(request_id);
         console.log('Converted ObjectId:', donationId);
@@ -93,41 +94,32 @@ async function updateDonationStatus(req, res) {
             });
         }
 
-        // Determine verification status based on the new status
-        const updateData = {
-            status: status,
-            verified: status === 'Published' ? true : false
-        };
-
-        // requestId = new mongoose.Types.ObjectId(request_id);
-
+        // Find existing document
         const existingDocument = await Donation.findById(donationId);
         console.log('Existing Document:', existingDocument);
 
         if (!existingDocument) {
-
             return res.status(404).json({ 
                 error: 'Request not found', 
                 details: `No document found with ID: ${request_id}` 
             });
         }
 
-        // Find and update the request
-        const updatedRequest = await Donation.findByIdAndUpdate(
-            donationId,
-            updateData,
-            {
-                new: true,
-                runValidators: true
+        // Update goods values
+        existingDocument.goods.forEach(good => {
+            const updatedGood = goods.find(g => g._id === good._id.toString());
+            if (updatedGood) {
+                good.value = updatedGood.value;
             }
-        );
+        });
 
-        // Check if request was found
-        if (!updatedRequest) {
-            return res.status(404).json({ error: 'Request not found' });
-        }
+        // Update status and verification
+        existingDocument.status = status;
+        existingDocument.verified = status === 'Published';
 
-        // Successful response
+        // Save updated document
+        const updatedRequest = await existingDocument.save();
+
         res.status(200).json({
             message: 'Request status updated successfully',
             request: updatedRequest
@@ -140,7 +132,6 @@ async function updateDonationStatus(req, res) {
         });
     }
 }
-
 module.exports = {
     getMemberDonations,
     updateDonationStatus
