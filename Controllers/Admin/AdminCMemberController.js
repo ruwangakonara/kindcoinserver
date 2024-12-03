@@ -98,6 +98,46 @@ async function view_crewMembers(req, res) {
   } catch (e) {}
 }
 
+async function delete_member(req, res) {
+  try {
+    const { user_id } = req.body;
+
+    console.log("removemember In");
+
+    // if (user_id !== null) {
+    //   await CrewMember.findByIdAndDelete(user_id);
+    //   await User.findByIdAndDelete(user_id);
+    //   console.log(`user/member ${user_id} deleted successfully`);
+    //   res.status(200).json({ success: "Deleted" });
+    // }
+
+    // First, find and delete the member based on the user_id reference
+    const member = await CrewMember.findByIdAndDelete(user_id);
+
+    if (!member) {
+      return res.status(404).json({ error: "member not found" });
+    }
+
+    // Then, find and delete the user by their _id
+    const memberUser = await User.findByIdAndDelete(user_id);
+
+    if (!memberUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Return both donor and user data in the response
+    res.status(200).json({
+      message: "member and user deleted successfully",
+      member,
+      memberUser,
+    });
+    console.log("removemember Out with success");
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: error.message });
+  }
+}
+
 async function get_members(req, res) {
   try {
     const members = await CrewMember.find();
@@ -113,6 +153,7 @@ async function get_members(req, res) {
 //
 
 module.exports = {
+  delete_member,
   crewMember_signup,
   crewMember_update,
   crewMember_assignTask,
