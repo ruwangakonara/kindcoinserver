@@ -13,6 +13,7 @@ const recepientController = require("../Controllers/CrewMember/recepientControll
 const requestController = require("../Controllers/CrewMember/RequestController");
 const adminController = require("../Controllers/Admin/donationController");
 const goodsController = require("../Controllers/CrewMember/goodsController");
+const crewController = require('../Controllers/CrewMember/crewProfileController');
 
 
 // router.get("/check-auth", (req, res, next) => {
@@ -57,5 +58,9 @@ router.get("/get_recepient",  recepientController.getAllBeneficiaries)
 router.put("/update_recepient_status",recepientController.updateBeneficiaryStatus)
 router.get("/get_request", requestController.getAllRequests)//Todo: Configure crew member auth
 router.put("/update_request_status", requestController.updateRequestStatus)//Todo: Configure crew member auth
+
+router.get('/profile', requireMemberAuth, crewController.getCrewProfile);
+router.put('/update-password', requireMemberAuth, crewController.updatePassword);
+router.post('/update-image', requireMemberAuth, crewController.updateProfileImage);
 
 module.exports = router;

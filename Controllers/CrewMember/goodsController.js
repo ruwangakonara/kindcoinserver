@@ -37,7 +37,21 @@ async function getMemberDonations(req, res) {
             },
             donorDetails: donation.donor_id,
             beneficiaryDetails: donation.beneficiary_id,
-            requestDetails: donation.request_id
+            requestDetails: donation.request_id,
+            documents: [
+                donation.image1 !== "https://via.placeholder.com/300"
+                    ? `http://localhost:9013/images/donations/${donation.image1}`
+                    : "https://via.placeholder.com/300",
+                donation.image2 !== "https://via.placeholder.com/300"
+                    ? `http://localhost:9013/images/donations/${donation.image2}`
+                    : "https://via.placeholder.com/300",
+                donation.image3 !== "https://via.placeholder.com/300"
+                    ? `http://localhost:9013/images/donations/${donation.image3}`
+                    : "https://via.placeholder.com/300",
+                donation.image4 !== "https://via.placeholder.com/300"
+                    ? `http://localhost:9013/images/donations/${donation.image4}`
+                    : "https://via.placeholder.com/300"
+            ].filter(Boolean),
         }));
 
         res.status(200).json({ donations: formattedDonations });
