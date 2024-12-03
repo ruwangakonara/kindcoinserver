@@ -11,12 +11,33 @@ async function getMemberDonations(req, res) {
     try {
         const token = req.cookies.Authorization;
         const decodedToken = jwt.verify(token, process.env["SECRET"]);
-        const user_id = decodedToken.sub;
-        console.log("req: ", decodedToken.sub);
+        const user_id = decodedToken.sub.toString();
+        console.log("req: ", decodedToken.sub.toString());
+
+        const objectId = new mongoose.Types.ObjectId(user_id);
+        console.log("objectId: ", objectId);
+        const member = await Member.findOne({user_id:user_id});
+
+        console.log("Member: ", member);
+
+        if (!member) {
+            const allMembers = await Member.find({});
+            // console.log("All Members:", allMembers);
+            // console.log("All Member user_ids:", allMembers.map(m => m.user_id));
+
+            return res.status(404).json({ 
+                message: 'Member not found', 
+                details: {
+                    searchedUserId: user_id,
+                    convertedObjectId: objectId.toString()
+                }
+            });
+        }
 
         // Find member using the user_id (assuming it's the member's _id)
         // In goodsController.js
-        const member = await Member.findOne({ user_id: new mongoose.Types.ObjectId(user_id) });
+        // const member = await Member.findOne({ user_id});
+        console.log("Member: ", member);
         console.log("Member: ", member._id);
         console.log("EMail: ", member.username);
         if (!member) {
