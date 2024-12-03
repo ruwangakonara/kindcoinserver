@@ -73,6 +73,7 @@ router.delete("/Donor_List/Donors/:id", AdminDonorController.removeDonor);
 router.post("/register/crew_member", AdminCrewMemController.crewMember_signup);
 router.get("/view/crew_member", AdminCrewMemController.view_crewMembers);
 router.get("/get_members", AdminCrewMemController.get_members);
+router.delete("/delete_member/:id", AdminCrewMemController.delete_member);
 // router.post(
 //   "/assign/crew_member",
 //   AdminCrewMemController.crewMember_assignTask
