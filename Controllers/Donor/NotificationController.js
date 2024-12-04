@@ -81,6 +81,7 @@ async function getNotifications(req, res){
         console.log(user_id)
 
         const donor = await Donor.findOne({user_id})
+        console.log(donor)
         donor_id = donor._id;
 
         console.log(donor_id);

@@ -10,15 +10,18 @@ async function getAllBeneficiaries(req, res) {
         const sanitizedRequests = benificiaries.map((request) => ({
             ...request._doc,
             user_id: request.user_id || { name: 'Unknown', email: 'Unknown' , address: 'Unknown', phoneNo: 'Unknown' },
+            certificate:   request.certificate_image !== "https://via.placeholder.com/300"
+                ? `http://localhost:9013/images/beneficiary_certificate/${request.certificate_image}`
+                : "https://via.placeholder.com/300",
             documents: [
                 request.image1 !== "https://via.placeholder.com/300"
-                    ? `http://localhost:9013/images/donations/${request.image1}`
+                    ? `http://localhost:9013/images/beneficiary_proof/${request.image1}`
                     : "https://via.placeholder.com/300",
                 request.image2 !== "https://via.placeholder.com/300"
-                    ? `http://localhost:9013/images/donations/${request.image2}`
+                    ? `http://localhost:9013/images/beneficiary_proof/${request.image2}`
                     : "https://via.placeholder.com/300",
                 request.image3 !== "https://via.placeholder.com/300"
-                    ? `http://localhost:9013/images/donations/${request.image3}`
+                    ? `http://localhost:9013/images/beneficiary_proof/${request.image3}`
                     : "https://via.placeholder.com/300"
             ].filter(Boolean)
         }));

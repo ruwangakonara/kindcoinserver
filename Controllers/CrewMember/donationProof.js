@@ -28,16 +28,16 @@ async function getAllDonations(req, res) {
             description: donation.description || 'No description provided', // Default description if not present
             documents: [
                 donation.image1 !== "https://via.placeholder.com/300" 
-                    ? `http://localhost:9013/images/donations/${donation.image1}` 
+                    ? `http://localhost:9013/images/donation_proof/${donation.image1}`
                     : "https://via.placeholder.com/300",
                 donation.image2 !== "https://via.placeholder.com/300" 
-                    ? `http://localhost:9013/images/donations/${donation.image2}` 
+                    ? `http://localhost:9013/images/donation_proof/${donation.image2}`
                     : "https://via.placeholder.com/300",
                 donation.image3 !== "https://via.placeholder.com/300" 
-                    ? `http://localhost:9013/images/donations/${donation.image3}` 
+                    ? `http://localhost:9013/images/donation_proof/${donation.image3}`
                     : "https://via.placeholder.com/300",
                 donation.image4 !== "https://via.placeholder.com/300" 
-                    ? `http://localhost:9013/images/donations/${donation.image4}` 
+                    ? `http://localhost:9013/images/donation_proof/${donation.image4}`
                     : "https://via.placeholder.com/300"
             ].filter(Boolean),
             status: donation.verified ? 'Verified' : 'Not Verified',
