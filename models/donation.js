@@ -7,7 +7,8 @@ const goodSchema = new mongoose.Schema({
     },
     amount: {
         type: String,
-        required: true
+        required: true,
+        default: 1
     }
 });
 
@@ -66,6 +67,12 @@ const donationSchema = new mongoose.Schema({
     verified:{
         type: Boolean,
         default: false
+    },
+    
+    status: {
+        type: String,
+        enum: ['Pending', 'Published', 'Rejected'],
+        default: 'Pending'
     },
 
     rewarded:{

@@ -40,12 +40,13 @@ router.post("/get_transaction", TokenController.getTransactionDetails2)
 // router.get("/knd_to_xlm", TokenController.getTokenToXlmRate)
 router.post("/dispatch", TokenController.dispatchTokens)
 router.get("/get_balance", TokenController.getDistributorBalance)
-router.post("/verify_goods_donation", DonationController.verifyGoodsDonation)
+router.put("/verify_goods_donation", DonationController.verifyGoodsDonation)
 router.post("/verify_monetary_donation", DonationController.verifyMonetaryDonation)
 //router.post("/goods_donations", adminController.getMemberDonations);
 // router.get("/goods_donations", requireMemberAuth, adminController.getMemberDonations);
 router.get("/goods_donations", goodsController.getMemberDonations);
-router.put('/update-donation-status', requireMemberAuth, goodsController.updateDonationStatus);
+// router.put('/update-donation-status',  goodsController.verifyGoodsDonation);
+// router.post('/update-donation-status',  DonationController.verifyGoodsDonation);
 
 
 router.post("/verify_donation_doc", DonationController.verifyDonationDoc);

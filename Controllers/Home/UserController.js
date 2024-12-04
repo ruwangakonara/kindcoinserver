@@ -269,6 +269,7 @@ async function signin(req, res) {
 
     const exp = Date.now() + 1000 * 60 * 60 * 24 * 10;
     const token = jwt.sign({ sub: user._id, exp }, process.env.SECRET);
+    console.log("Generated token: ",token);
 
     res.cookie("Authorization", token, {
       expires: new Date(exp),
