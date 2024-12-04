@@ -8,6 +8,7 @@ const Beneficiary = require("../Home/UserController").Beneficiary;
 const Donor = donor.Donor
 const Member = donor.Member
 const Request = require("../Beneficiary/request_cycle_breaker").Request
+const jwt = require('jsonwebtoken');
 
 async function verifyMonetaryDonation(req, res) {
 
@@ -64,21 +65,32 @@ async function verifyGoodsDonation(req, res) {
 
     try{
 
+        // const token = req.cookies.Authorization;
+        // const decodedToken = jwt.verify(token, process.env["SECRET"]);
+        // const user_id = decodedToken.sub.toString();
+        // console.log("req: ", decodedToken.sub.toString());
 
-        const user_id = new mongoose.Types.ObjectId(req.sub)
-        console.log(user_id)
+        
 
-        const member = await Member.findOne({user_id})
 
-        const donation_id = new mongoose.Types.ObjectId(req.body.donation_id)
+        // const user_id = new mongoose.Types.ObjectId(req.sub)
+        // console.log(user_id)
+
+        // const member = await Member.findOne({user_id})
+
+        const donation_id = new mongoose.Types.ObjectId(req.body.donation_id);
+        console.log("Donation id : ", donation_id);
 
         const value = req.body.value;
+        console.log("Value : ", value);
 
-        if(member._id !== donation.member_id){
-            return res.status(400).send()
-        }
+        // if(member._id !== donation.member_id){
+        //     return res.status(400).send()
+        // }
         const donation = await Donation.findByIdAndUpdate(donation_id, {verified: true, value: value}, {new: true})
-        const request = await Request.findByID(donation.request_id);
+        console.log("Donation : ", donation);
+        const request = await Request.findById(donation.request_id);
+        console.log("Request : ", request);
 
         await Request.findByIdAndUpdate(donation.request_id, {$inc: { raised: donation?.value}})
         // await Beneficiary.findByIdAndUpdate(request.beneficiary_id, )
@@ -114,6 +126,7 @@ async function verifyGoodsDonation(req, res) {
 
     } catch (error){
 
+        console.log("Error : ", error);
         res.status(400).json({error})
 
     }
