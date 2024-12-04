@@ -4,6 +4,12 @@ const Donation = require("../../models/donation");
 // const Request = require("../../models/request");
 const mongoose = require("mongoose");
 const jwt = require('jsonwebtoken');
+// const Beneficiary = require("../../models/beneficiary");
+// const DonorNotification = require("../../models/donorNotification");
+// const BeneficiaryNotification = require("../../models/beneficiaryNotification");
+// const Donor = require("../../models/donor");
+// const Request = require("../../models/request");
+
 
 
 
@@ -63,9 +69,11 @@ async function getMemberDonations(req, res) {
                 title: donation.title,
                 description: donation.description,
                 type: donation.type,
+                status: donation.status,
                 value: donation.value,
                 verified: donation.verified,
-                created: donation.created
+                created: donation.created,
+                goods: donation.goods
             },
             donorDetails: donation.donor_id,
             beneficiaryDetails: donation.beneficiary_id,
@@ -95,65 +103,105 @@ async function getMemberDonations(req, res) {
 }
 
 
-async function updateDonationStatus(req, res) {
+async function updateGoodsValues(req, res) {
     try {
-        const { request_id, status, goods } = req.body;
+        const { donationId, goods } = req.body;
 
-        console.log('Incoming request_id raw:', request_id);
-        console.log('Incoming status:', status);
-        console.log('Incoming goods:', goods);
-
-        const donationId = new mongoose.Types.ObjectId(request_id);
-        console.log('Converted ObjectId:', donationId);
-
-        // Validate status
-        const validStatuses = ['Pending', 'Published', 'Rejected'];
-        if (!validStatuses.includes(status)) {
-            return res.status(400).json({
-                error: 'Invalid status value',
-                validStatuses
-            });
+        const donation = await Donation.findById(donationId);
+        if (!donation) {
+            return res.status(404).json({ message: 'Donation not found' });
         }
 
-        // Find existing document
-        const existingDocument = await Donation.findById(donationId);
-        console.log('Existing Document:', existingDocument);
-
-        if (!existingDocument) {
-            return res.status(404).json({ 
-                error: 'Request not found', 
-                details: `No document found with ID: ${request_id}` 
-            });
-        }
-
-        // Update goods values
-        existingDocument.goods.forEach(good => {
-            const updatedGood = goods.find(g => g._id === good._id.toString());
+        // Explicitly update goods amounts
+        donation.goods = donation.goods.map(existingGood => {
+            const updatedGood = goods.find(g => g._id === existingGood._id.toString());
+            
             if (updatedGood) {
-                good.value = updatedGood.value;
+                // Explicitly set the amount, converting to the same type
+                existingGood.amount = String(updatedGood.amount);
             }
+            
+            return existingGood;
         });
 
-        // Update status and verification
-        existingDocument.status = status;
-        existingDocument.verified = status === 'Published';
+        donation.status = 'Published';
+        donation.verified = true;
 
-        // Save updated document
-        const updatedRequest = await existingDocument.save();
+        const updatedDonation = await donation.save();
 
         res.status(200).json({
-            message: 'Request status updated successfully',
-            request: updatedRequest
+            message: 'Goods values updated and status changed to Published',
+            donation: updatedDonation
         });
-    } catch (err) {
-        console.error('Update status error:', err);
-        res.status(500).json({
-            error: 'Internal server error',
-            details: err.message
-        });
+    } catch (error) {
+        console.error('Error updating goods values:', error);
+        res.status(500).json({ error: error.message });
     }
 }
+
+// async function verifyGoodsDonation(req, res) {
+
+//     try{
+
+
+//         // const user_id = new mongoose.Types.ObjectId(req.sub)
+//         // console.log(user_id)
+
+//         // const member = await Member.findOne({user_id})
+
+//         const donation_id = new mongoose.Types.ObjectId(req.body.donation_id)
+
+//         // const value = req.body.value;
+
+//         // if(member._id !== donation.member_id){
+//         //     return res.status(400).send()
+//         // }
+//         const donation = await Donation.findByIdAndUpdate(donation_id, {verified: true, value: value}, {new: true})
+//         const request = await Request.findByID(donation.request_id);
+
+//         await Request.findByIdAndUpdate(donation.request_id, {$inc: { raised: donation?.value}})
+//         // await Beneficiary.findByIdAndUpdate(request.beneficiary_id, )
+
+//         const beneficiary = await Beneficiary.findByIdAndUpdate(request.beneficiary_id,{$inc: { raised_amount: donation?.value}}, {new: true});
+
+
+//         const donornotification = {
+//             title:"Donation Verified",
+//             donor_id: donation.donor_id,
+//             beneficiary_id: beneficiary._id,
+//             request_id: request._id,
+//             donation_id: donation._id,
+//             member_id: donation.member_id
+//         }
+//         await DonorNotification.create(donornotification)
+
+//         const beneficiarynotification = {
+//             title:"Donation Reception Verified",
+//             donor_id: donation.donor_id,
+//             beneficiary_id: beneficiary._id,
+//             request_id: request._id,
+//             donation_id: donation._id,
+//             member_id: donation.member_id
+//         }
+
+//         await BeneficiaryNotification.create(beneficiarynotification)
+
+//         const donor_id = Donation.donor_id
+//         const donor = await Donor.findByIdAndUpdate(donor_id, { $inc: { donated: donation?.value, no_donations: 1 } }, {new: true})
+
+//         res.status(200).json({donor, donation})
+
+//     } catch (error){
+
+//         res.status(400).json({error})
+
+//     }
+
+
+// }
+
+
 module.exports = {
     getMemberDonations,
-    updateDonationStatus
+    updateGoodsValues
 };
