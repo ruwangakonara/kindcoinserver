@@ -237,7 +237,6 @@ async function getDonations2(req, res) {
         // req.body.request_id  =  new mongoose.Types.ObjectId(req.body.request_id);
 
         const donations = await getDonationsWithDonorBeneficiaryRequestDetails(req.body);
-        console.log(donations);
 
         res.status(200).json({donations: donations});
 
