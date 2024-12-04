@@ -21,11 +21,13 @@ async function getAllBeneficiaries(req, res) {
 /* TESTED */
 async function getBeneficiary(req, res) {
   try {
-    const { user_id } = req.params.id;
-    // const beneficiary = await Beneficiary.findOne(beneficiary_id).populate(
-    //   "user_id"
-    // );
-    const beneficiary = await Beneficiary.findOne(user_id);
+    const { id } = req.params;
+    console.log("Beneficiary Uid", id);
+    const beneficiary = await Beneficiary.findOne({ user_id: id });
+    if (!beneficiary) {
+      return res.status(404).json({ message: "beneficiary not found" });
+    }
+    console.log(beneficiary);
     res.status(200).json(beneficiary);
   } catch (error) {
     console.log(error);

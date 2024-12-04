@@ -16,8 +16,14 @@ async function getAllDonors(req, res) {
 
 async function getDonor(req, res) {
   try {
-    const { user_id } = req.body;
-    const donor = await Donor.findOne(user_id);
+    const { id } = req.params;
+    console.log("Donor Uid", id);
+    const donor = await Donor.findOne({ user_id: id });
+
+    if (!donor) {
+      return res.status(404).json({ message: "Donor not found" });
+    }
+
     console.log(donor.username);
     res.status(200).json(donor);
   } catch (error) {
